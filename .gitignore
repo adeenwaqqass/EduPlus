@@ -1,0 +1,15 @@
+# Node dependencies
+node_modules/
+dist/
+build/
+
+# Java target
+target/
+*.class
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+*.log
+*.env
