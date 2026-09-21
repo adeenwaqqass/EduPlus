@@ -1,0 +1,471 @@
+[
+  {
+    "id": "fac-01",
+    "facultyId": "FAC-01",
+    "name": "Prof. Sarah Jenkins",
+    "designation": "Professor & AI Lab In-Charge",
+    "department": "COMPUTER ENGINEERING",
+    "email": "sarah.jenkins@eduplus.edu",
+    "phone": "+91 98230 11201",
+    "qualification": "Ph.D. in Deep Learning (Stanford / IIT Bombay)",
+    "specialization": "Neural Networks, Deep Learning & Generative AI",
+    "officeLocation": "Tech Building A, Cabin 304",
+    "joiningYear": 2017,
+    "experienceYears": 14,
+    "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+    "assignedCourses": [
+      "23UCOPEL4703B",
+      "23UCOPEP4703B"
+    ]
+  },
+  {
+    "id": "fac-02",
+    "facultyId": "FAC-02",
+    "name": "Prof. Rajesh Kulkarni",
+    "designation": "Associate Professor & DevOps Lead",
+    "department": "COMPUTER ENGINEERING",
+    "email": "rajesh.kulkarni@eduplus.edu",
+    "phone": "+91 98230 11202",
+    "qualification": "M.Tech in Cloud Systems (COEP Pune)",
+    "specialization": "Cloud Infrastructure, Kubernetes & DevOps",
+    "officeLocation": "Tech Building A, Cabin 308",
+    "joiningYear": 2019,
+    "experienceYears": 11,
+    "avatar": "https://randomuser.me/api/portraits/men/32.jpg",
+    "assignedCourses": [
+      "23UCOPCL4713"
+    ]
+  },
+  {
+    "id": "fac-03",
+    "facultyId": "FAC-03",
+    "name": "Dr. Anita Roy",
+    "designation": "Associate Professor & CyberSec Coordinator",
+    "department": "COMPUTER ENGINEERING",
+    "email": "anita.roy@eduplus.edu",
+    "phone": "+91 98230 11203",
+    "qualification": "Ph.D. in Cryptography (IISc Bangalore)",
+    "specialization": "Network Security, Blockchain & Cryptography",
+    "officeLocation": "Tech Building B, Cabin 210",
+    "joiningYear": 2018,
+    "experienceYears": 12,
+    "avatar": "https://randomuser.me/api/portraits/women/44.jpg",
+    "assignedCourses": [
+      "23UCOPCL4712"
+    ]
+  },
+  {
+    "id": "fac-04",
+    "facultyId": "ADM-01",
+    "name": "Dr. James Miller (HOD & Admin)",
+    "designation": "Head of Department & Senior Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "james.miller@eduplus.edu",
+    "phone": "+91 98230 11200",
+    "qualification": "Ph.D. in Computer Science & Engineering",
+    "specialization": "Distributed Systems & Academic Administration",
+    "officeLocation": "HOD Wing, Main Building 101",
+    "joiningYear": 2012,
+    "experienceYears": 22,
+    "avatar": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80",
+    "assignedCourses": [
+      "23UCOELP4703"
+    ]
+  },
+  {
+    "id": "fac-05",
+    "facultyId": "FAC-05",
+    "name": "Prof. Vikram Sharma",
+    "designation": "Assistant Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "vikram.sharma@eduplus.edu",
+    "phone": "+91 98230 11205",
+    "qualification": "M.Tech in Data Science (VNIT Nagpur)",
+    "specialization": "Data Structures & Algorithm Design",
+    "officeLocation": "Tech Building A, Cabin 205",
+    "joiningYear": 2021,
+    "experienceYears": 6,
+    "avatar": "https://randomuser.me/api/portraits/men/45.jpg",
+    "assignedCourses": [
+      "23UCOPEL4705C"
+    ]
+  },
+  {
+    "id": "fac-06",
+    "facultyId": "FAC-06",
+    "name": "Dr. Meera Kulkarni",
+    "designation": "Assistant Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "meera.kulkarni@eduplus.edu",
+    "phone": "+91 98230 11206",
+    "qualification": "Ph.D. in Natural Language Processing",
+    "specialization": "NLP, Large Language Models & Speech Processing",
+    "officeLocation": "Tech Building B, Cabin 104",
+    "joiningYear": 2020,
+    "experienceYears": 8,
+    "avatar": "https://randomuser.me/api/portraits/women/68.jpg",
+    "assignedCourses": [
+      "23UCOELL4804"
+    ]
+  },
+  {
+    "id": "fac-07",
+    "facultyId": "FAC-07",
+    "name": "Prof. Sanjay Gupta",
+    "designation": "Assistant Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "sanjay.gupta@eduplus.edu",
+    "phone": "+91 98230 11207",
+    "qualification": "M.Tech in Software Engineering",
+    "specialization": "Web Engineering & Microservices Architecture",
+    "officeLocation": "Tech Building A, Cabin 302",
+    "joiningYear": 2022,
+    "experienceYears": 5,
+    "avatar": "https://randomuser.me/api/portraits/men/52.jpg",
+    "assignedCourses": [
+      "23UCOPEL4704D"
+    ]
+  },
+  {
+    "id": "fac-08",
+    "facultyId": "FAC-08",
+    "name": "Dr. Arthur Pendelton",
+    "designation": "Associate Professor & Robotics Lab Lead",
+    "department": "COMPUTER ENGINEERING",
+    "email": "arthur.pendelton@eduplus.edu",
+    "phone": "+91 98230 11208",
+    "qualification": "Ph.D. in Autonomous Systems (MIT)",
+    "specialization": "Robotics, Control Systems & Computer Vision",
+    "officeLocation": "Robotics Lab, Cabin 102",
+    "joiningYear": 2016,
+    "experienceYears": 15,
+    "avatar": "https://randomuser.me/api/portraits/men/60.jpg",
+    "assignedCourses": [
+      "23UCOPEP4703B"
+    ]
+  },
+  {
+    "id": "fac-09",
+    "facultyId": "FAC-09",
+    "name": "Prof. Marcus Vance",
+    "designation": "Assistant Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "marcus.vance@eduplus.edu",
+    "phone": "+91 98230 11209",
+    "qualification": "M.Tech in Embedded Systems",
+    "specialization": "Digital Logic & IoT Systems",
+    "officeLocation": "Tech Building B, Cabin 208",
+    "joiningYear": 2020,
+    "experienceYears": 7,
+    "avatar": "https://randomuser.me/api/portraits/men/71.jpg",
+    "assignedCourses": [
+      "23UCOPCP4713"
+    ]
+  },
+  {
+    "id": "fac-10",
+    "facultyId": "FAC-10",
+    "name": "Dr. Emily Noether",
+    "designation": "Professor of Applied Mathematics",
+    "department": "COMPUTER ENGINEERING",
+    "email": "emily.noether@eduplus.edu",
+    "phone": "+91 98230 11210",
+    "qualification": "Ph.D. in Applied Mathematics (Oxford)",
+    "specialization": "Linear Algebra, Probability & Optimization",
+    "officeLocation": "Science Block, Cabin 401",
+    "joiningYear": 2015,
+    "experienceYears": 18,
+    "avatar": "https://randomuser.me/api/portraits/women/55.jpg",
+    "assignedCourses": [
+      "23UCOPCP4712"
+    ]
+  },
+  {
+    "id": "fac-11",
+    "facultyId": "FAC-11",
+    "name": "Prof. Alan Poe",
+    "designation": "Assistant Professor & Project Mentor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "alan.poe@eduplus.edu",
+    "phone": "+91 98230 11211",
+    "qualification": "M.Tech in System Design",
+    "specialization": "Software Architecture & Design Patterns",
+    "officeLocation": "Tech Building A, Cabin 108",
+    "joiningYear": 2021,
+    "experienceYears": 6,
+    "avatar": "https://randomuser.me/api/portraits/men/82.jpg",
+    "assignedCourses": [
+      "23UCOELP4703"
+    ]
+  },
+  {
+    "id": "fac-12",
+    "facultyId": "FAC-12",
+    "name": "Dr. Alan Turing",
+    "designation": "Senior Professor & DBMS Specialist",
+    "department": "COMPUTER ENGINEERING",
+    "email": "alan.turing@eduplus.edu",
+    "phone": "+91 98230 11212",
+    "qualification": "Ph.D. in Database Architectures (Cambridge)",
+    "specialization": "Relational Databases, NoSQL & Distributed Query Engine",
+    "officeLocation": "Main Building 202",
+    "joiningYear": 2010,
+    "experienceYears": 24,
+    "avatar": "https://randomuser.me/api/portraits/men/91.jpg",
+    "assignedCourses": [
+      "23UCOPCL4713"
+    ]
+  },
+  {
+    "id": "fac-13",
+    "facultyId": "FAC-13",
+    "name": "Prof. Kavya Joshi",
+    "designation": "Assistant Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "kavya.joshi@eduplus.edu",
+    "phone": "+91 98230 11213",
+    "qualification": "M.Tech in Information Technology",
+    "specialization": "Operating Systems & System Programming",
+    "officeLocation": "Tech Building B, Cabin 305",
+    "joiningYear": 2022,
+    "experienceYears": 4,
+    "avatar": "https://randomuser.me/api/portraits/women/29.jpg",
+    "assignedCourses": [
+      "23UCOPCL4712"
+    ]
+  },
+  {
+    "id": "fac-14",
+    "facultyId": "FAC-14",
+    "name": "Dr. Aniket Deshmukh",
+    "designation": "Associate Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "aniket.deshmukh@eduplus.edu",
+    "phone": "+91 98230 11214",
+    "qualification": "Ph.D. in Computer Networks",
+    "specialization": "High-Speed Networks & SDN Architectures",
+    "officeLocation": "Tech Building A, Cabin 402",
+    "joiningYear": 2017,
+    "experienceYears": 13,
+    "avatar": "https://randomuser.me/api/portraits/men/18.jpg",
+    "assignedCourses": [
+      "23UCOPEL4705C"
+    ]
+  },
+  {
+    "id": "fac-15",
+    "facultyId": "FAC-15",
+    "name": "Prof. Pooja Patel",
+    "designation": "Assistant Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "pooja.patel@eduplus.edu",
+    "phone": "+91 98230 11215",
+    "qualification": "M.Tech in Data Analytics",
+    "specialization": "Data Mining & Big Data Analytics",
+    "officeLocation": "Tech Building B, Cabin 201",
+    "joiningYear": 2021,
+    "experienceYears": 5,
+    "avatar": "https://randomuser.me/api/portraits/women/33.jpg",
+    "assignedCourses": [
+      "23UCOELL4804"
+    ]
+  },
+  {
+    "id": "fac-16",
+    "facultyId": "FAC-16",
+    "name": "Dr. Utkarsh Verma",
+    "designation": "Associate Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "utkarsh.verma@eduplus.edu",
+    "phone": "+91 98230 11216",
+    "qualification": "Ph.D. in Theoretical Computer Science",
+    "specialization": "Automata Theory & Complexity Classes",
+    "officeLocation": "Main Building 305",
+    "joiningYear": 2018,
+    "experienceYears": 11,
+    "avatar": "https://randomuser.me/api/portraits/men/22.jpg",
+    "assignedCourses": [
+      "23UCOPEL4704D"
+    ]
+  },
+  {
+    "id": "fac-17",
+    "facultyId": "FAC-17",
+    "name": "Prof. Shreya Bhat",
+    "designation": "Assistant Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "shreya.bhat@eduplus.edu",
+    "phone": "+91 98230 11217",
+    "qualification": "M.Tech in Artificial Intelligence",
+    "specialization": "Computer Vision & Image Processing",
+    "officeLocation": "AI Center Cabin 104",
+    "joiningYear": 2022,
+    "experienceYears": 4,
+    "avatar": "https://randomuser.me/api/portraits/women/24.jpg",
+    "assignedCourses": [
+      "23UCOPEP4703B"
+    ]
+  },
+  {
+    "id": "fac-18",
+    "facultyId": "FAC-18",
+    "name": "Dr. Tanmay Rao",
+    "designation": "Associate Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "tanmay.rao@eduplus.edu",
+    "phone": "+91 98230 11218",
+    "qualification": "Ph.D. in Parallel Processing",
+    "specialization": "High-Performance Computing & CUDA GPU Programming",
+    "officeLocation": "Tech Building A, Cabin 501",
+    "joiningYear": 2016,
+    "experienceYears": 14,
+    "avatar": "https://randomuser.me/api/portraits/men/35.jpg",
+    "assignedCourses": [
+      "23UCOPCP4713"
+    ]
+  },
+  {
+    "id": "fac-19",
+    "facultyId": "FAC-19",
+    "name": "Prof. Neha Chaudhary",
+    "designation": "Assistant Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "neha.chaudhary@eduplus.edu",
+    "phone": "+91 98230 11219",
+    "qualification": "M.Tech in Information Security",
+    "specialization": "Ethical Hacking & Penetration Testing",
+    "officeLocation": "Tech Building B, Cabin 309",
+    "joiningYear": 2020,
+    "experienceYears": 6,
+    "avatar": "https://randomuser.me/api/portraits/women/48.jpg",
+    "assignedCourses": [
+      "23UCOPCP4712"
+    ]
+  },
+  {
+    "id": "fac-20",
+    "facultyId": "FAC-20",
+    "name": "Dr. Rohan Sharma",
+    "designation": "Assistant Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "rohan.sharma@eduplus.edu",
+    "phone": "+91 98230 11220",
+    "qualification": "Ph.D. in Wireless Networks",
+    "specialization": "Cellular Protocols & Sensor Networks",
+    "officeLocation": "Tech Building A, Cabin 408",
+    "joiningYear": 2019,
+    "experienceYears": 9,
+    "avatar": "https://randomuser.me/api/portraits/men/58.jpg",
+    "assignedCourses": [
+      "23UCOELP4703"
+    ]
+  },
+  {
+    "id": "fac-21",
+    "facultyId": "FAC-21",
+    "name": "Prof. Divya Pawar",
+    "designation": "Assistant Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "divya.pawar@eduplus.edu",
+    "phone": "+91 98230 11221",
+    "qualification": "M.Tech in VLSI & Digital Systems",
+    "specialization": "Digital Microelectronics & FPGA Programming",
+    "officeLocation": "Science Block, Cabin 202",
+    "joiningYear": 2021,
+    "experienceYears": 5,
+    "avatar": "https://randomuser.me/api/portraits/women/52.jpg",
+    "assignedCourses": [
+      "23UCOPEP4703B"
+    ]
+  },
+  {
+    "id": "fac-22",
+    "facultyId": "FAC-22",
+    "name": "Dr. Sameer Bansal",
+    "designation": "Associate Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "sameer.bansal@eduplus.edu",
+    "phone": "+91 98230 11222",
+    "qualification": "Ph.D. in Reinforcement Learning",
+    "specialization": "Deep Q-Learning, Markov Models & AI Decision Making",
+    "officeLocation": "AI Center Cabin 201",
+    "joiningYear": 2017,
+    "experienceYears": 12,
+    "avatar": "https://randomuser.me/api/portraits/men/64.jpg",
+    "assignedCourses": [
+      "23UCOPCP4713"
+    ]
+  },
+  {
+    "id": "fac-23",
+    "facultyId": "FAC-23",
+    "name": "Prof. Riya Kapoor",
+    "designation": "Assistant Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "riya.kapoor@eduplus.edu",
+    "phone": "+91 98230 11223",
+    "qualification": "M.Tech in Cloud Security",
+    "specialization": "Zero Trust Security & AWS Identity Management",
+    "officeLocation": "Tech Building A, Cabin 312",
+    "joiningYear": 2022,
+    "experienceYears": 4,
+    "avatar": "https://randomuser.me/api/portraits/women/62.jpg",
+    "assignedCourses": [
+      "23UCOPCP4712"
+    ]
+  },
+  {
+    "id": "fac-24",
+    "facultyId": "FAC-24",
+    "name": "Dr. Harsh Saxena",
+    "designation": "Associate Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "harsh.saxena@eduplus.edu",
+    "phone": "+91 98230 11224",
+    "qualification": "Ph.D. in Cyber Forensics",
+    "specialization": "Malware Analysis & Digital Evidence Collection",
+    "officeLocation": "Tech Building B, Cabin 401",
+    "joiningYear": 2018,
+    "experienceYears": 11,
+    "avatar": "https://randomuser.me/api/portraits/men/76.jpg",
+    "assignedCourses": [
+      "23UCOPEP4703B"
+    ]
+  },
+  {
+    "id": "fac-25",
+    "facultyId": "FAC-25",
+    "name": "Prof. Ayush Mishra",
+    "designation": "Assistant Professor",
+    "department": "COMPUTER ENGINEERING",
+    "email": "ayush.mishra@eduplus.edu",
+    "phone": "+91 98230 11225",
+    "qualification": "M.Tech in Software Engineering",
+    "specialization": "Full-Stack Development & Microservices",
+    "officeLocation": "Tech Building A, Cabin 104",
+    "joiningYear": 2021,
+    "experienceYears": 5,
+    "avatar": "https://randomuser.me/api/portraits/men/86.jpg",
+    "assignedCourses": [
+      "23UCOPCP4713"
+    ]
+  },
+  {
+    "id": "fac-26",
+    "facultyId": "FAC-26",
+    "name": "Dr. Ananya Trivedi",
+    "designation": "Associate Professor & Research Chair",
+    "department": "COMPUTER ENGINEERING",
+    "email": "ananya.trivedi@eduplus.edu",
+    "phone": "+91 98230 11226",
+    "qualification": "Ph.D. in Machine Learning & Bio-Informatics",
+    "specialization": "Predictive Modeling & Statistical AI",
+    "officeLocation": "Main Building 402",
+    "joiningYear": 2016,
+    "experienceYears": 13,
+    "avatar": "https://randomuser.me/api/portraits/women/79.jpg",
+    "assignedCourses": [
+      "23UCOPCP4712"
+    ]
+  }
+]

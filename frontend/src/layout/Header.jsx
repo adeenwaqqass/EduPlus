@@ -26,8 +26,8 @@ export default function Header({
 }) {
   const [isBellHovered, setIsBellHovered] = useState(false);
 
-  const userNameDisplay = currentUser?.shortName || (currentUser?.name ? currentUser.name.split(' ')[0].toUpperCase() : 'ADEEN');
-  const userAvatarDisplay = currentUser?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80";
+  const userNameDisplay = currentUser?.shortName || (currentUser?.name ? currentUser.name.split(' ')[0].toUpperCase() : 'USER');
+  const userAvatarDisplay = currentUser?.avatar || "https://randomuser.me/api/portraits/men/1.jpg";
 
   // ... rest of Header component ...
   const [activeHoverId, setActiveHoverId] = useState(null);
@@ -77,6 +77,10 @@ export default function Header({
 
   const dismissNotification = (e, id) => {
     e.stopPropagation();
+    if (currentUser?.role === 'student') {
+      alert('Action Restricted: Students cannot delete or edit notifications.');
+      return;
+    }
     if (setNotifications && notifications) {
       setNotifications(notifications.filter(n => n.id !== id));
     }

@@ -43,9 +43,16 @@ public class StudentService {
         student.setPhone(dto.getPhone());
         student.setAvatar(dto.getAvatar());
         student.setCgpa(dto.getCgpa());
+        student.setSgpa(dto.getSgpa());
         student.setAttendancePercentage(dto.getAttendancePercentage());
         student.setRiskLevel(dto.getRiskLevel() != null ? dto.getRiskLevel() : "NORMAL");
         student.setRiskScore(dto.getRiskScore() != null ? dto.getRiskScore() : 15.0);
+        student.setFatherName(dto.getFatherName());
+        student.setMotherName(dto.getMotherName());
+        student.setDegree(dto.getDegree() != null ? dto.getDegree() : "Bachelor of Technology");
+        student.setScheme(dto.getScheme() != null ? dto.getScheme() : "COMPUTER ENGINEERING 2023-24");
+        student.setAdmissionCategory(dto.getAdmissionCategory() != null ? dto.getAdmissionCategory() : "CAP Round I");
+        student.setAcademicSession(dto.getAcademicSession() != null ? dto.getAcademicSession() : "WINTER 2026");
         student.setParentName(dto.getParentName());
         student.setParentPhone(dto.getParentPhone());
         student.setAddress(dto.getAddress());
@@ -70,9 +77,16 @@ public class StudentService {
                 .phone(st.getPhone())
                 .avatar(st.getAvatar())
                 .cgpa(st.getCgpa())
+                .sgpa(st.getSgpa())
                 .attendancePercentage(st.getAttendancePercentage())
                 .riskLevel(st.getRiskLevel())
                 .riskScore(st.getRiskScore())
+                .fatherName(st.getFatherName())
+                .motherName(st.getMotherName())
+                .degree(st.getDegree())
+                .scheme(st.getScheme())
+                .admissionCategory(st.getAdmissionCategory())
+                .academicSession(st.getAcademicSession())
                 .parentName(st.getParentName())
                 .parentPhone(st.getParentPhone())
                 .address(st.getAddress())

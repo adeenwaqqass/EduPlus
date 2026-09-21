@@ -14,14 +14,15 @@ import {
   ShieldCheck,
   User,
   Lock,
-  ChevronRight
+  ChevronRight,
+  TrendingUp
 } from 'lucide-react';
 
 export default function Sidebar({ activeTab, setActiveTab, currentUser }) {
   const [showProfileModal, setShowProfileModal] = useState(false);
 
-  const userNameDisplay = currentUser?.name || 'Mr. Adeen Waqqas';
-  const userAvatarDisplay = currentUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80';
+  const userNameDisplay = currentUser?.name || 'Academic User';
+  const userAvatarDisplay = currentUser?.avatar || 'https://randomuser.me/api/portraits/men/1.jpg';
   const [activeFlyout, setActiveFlyout] = useState(null);
   const [activeSubFlyout, setActiveSubFlyout] = useState('exam-reports');
   const footerRef = useRef(null);
@@ -95,6 +96,12 @@ export default function Sidebar({ activeTab, setActiveTab, currentUser }) {
       icon: LayoutDashboard,
       hasSubmenu: false 
     },
+    ...((currentUser?.role === 'student' || currentUser?.role === 'faculty' || currentUser?.role === 'admin') ? [{
+      id: 'analytics',
+      label: 'Analytics',
+      icon: TrendingUp,
+      hasSubmenu: false
+    }] : []),
     ...(currentUser?.role === 'admin' ? [{ 
       id: 'admission', 
       label: 'Admission', 
@@ -206,7 +213,7 @@ export default function Sidebar({ activeTab, setActiveTab, currentUser }) {
         </div>
 
         {/* Early Warning Risk Banner Indicator */}
-        <div style={styles.riskBanner} onClick={() => setActiveTab('dashboard')}>
+        <div style={styles.riskBanner} onClick={() => setActiveTab('analytics')}>
           <ShieldCheck size={16} color="#00a884" />
           <span style={{ fontSize: '0.78rem', fontWeight: 600, color: '#e2e8f0' }}>
             EduPlus Achilles 1.0 Active

@@ -28,37 +28,53 @@ public class GradeService {
         List<GradeRecord> records = gradeRepository.findByRegistrationNumber(regNo);
         List<GradeCardDTO.CourseGradeItem> courseItems = new ArrayList<>();
 
+        double totalCreditPoints = 0.0;
+        int totalCredits = 0;
+
         if (records.isEmpty()) {
             // Default sample items
-            courseItems.add(createSampleGradeItem("CS701", "Deep Learning & Neural Networks", 4, 23, 24, 19, 88));
-            courseItems.add(createSampleGradeItem("CS702", "Cloud Computing & DevOps", 4, 21, 22, 18, 82));
-            courseItems.add(createSampleGradeItem("CS703", "Cybersecurity & Cryptography", 3, 19, 20, 16, 74));
+            courseItems.add(createSampleGradeItem("CS701", "Deep Learning & Neural Networks", 4, 23, 24, 19, 58));
+            courseItems.add(createSampleGradeItem("CS702", "Cloud Computing & DevOps", 4, 21, 22, 18, 54));
+            courseItems.add(createSampleGradeItem("CS703", "Cybersecurity & Cryptography", 3, 19, 20, 16, 48));
+            courseItems.add(createSampleGradeItem("CS704P", "Major Project Phase - I", 6, 20, 20, 20, 52));
+            courseItems.add(createSampleGradeItem("CS705P", "Advanced AI Lab", 2, 18, 19, 18, 50));
+            totalCreditPoints = 4*9 + 4*8 + 3*7 + 6*9 + 2*8;
+            totalCredits = 4 + 4 + 3 + 6 + 2;
         } else {
             for (GradeRecord gr : records) {
+                int crd = gr.getCourseCode().endsWith("P") ? 6 : (gr.getCourseCode().equals("CS705P") ? 2 : 4);
+                if (gr.getCourseCode().equals("CS703")) crd = 3;
+                
+                int pts = gr.getGradePoints() != null ? gr.getGradePoints() : calculateSPPUGradePoint(gr.getTotalMarks() != null ? gr.getTotalMarks() : 70);
+                totalCreditPoints += (pts * crd);
+                totalCredits += crd;
+
                 courseItems.add(GradeCardDTO.CourseGradeItem.builder()
                         .courseCode(gr.getCourseCode())
                         .courseTitle("Course " + gr.getCourseCode())
-                        .credits(4)
+                        .credits(crd)
                         .ut1(gr.getUt1())
                         .ut2(gr.getUt2())
                         .internalScore(gr.getInternalScore())
                         .endSemScore(gr.getEndSemScore())
                         .totalMarks(gr.getTotalMarks())
-                        .letterGrade(gr.getLetterGrade())
-                        .gradePoints(gr.getGradePoints())
+                        .letterGrade(gr.getLetterGrade() != null ? gr.getLetterGrade() : calculateSPPULetterGrade(gr.getTotalMarks()))
+                        .gradePoints(pts)
                         .build());
             }
         }
+
+        double computedSgpa = totalCredits > 0 ? (Math.round((totalCreditPoints / totalCredits) * 100.0) / 100.0) : 7.50;
 
         return GradeCardDTO.builder()
                 .studentName(student.getName())
                 .registrationNumber(student.getRegistrationNumber())
                 .rollNumber(student.getRollNumber())
                 .branch(student.getBranch())
-                .academicSession("WINTER 2026")
-                .semesterTitle("Semester VII")
-                .sgpa(6.48)
-                .cgpa(student.getCgpa() != null ? student.getCgpa() : 6.23)
+                .academicSession(student.getAcademicSession() != null ? student.getAcademicSession() : "WINTER 2026")
+                .semesterTitle(student.getSemester() != null ? student.getSemester() : "Semester VII")
+                .sgpa(student.getSgpa() != null ? student.getSgpa() : computedSgpa)
+                .cgpa(student.getCgpa() != null ? student.getCgpa() : 7.25)
                 .courses(courseItems)
                 .build();
     }
@@ -72,7 +88,6 @@ public class GradeService {
                         .build());
 
         if ("faculty".equalsIgnoreCase(userRole)) {
-            // Faculty can ONLY enter internal assessment & unit test marks (out of 20 each)
             if (request.getEndSemScore() != null) {
                 throw new UnauthorizedAccessException("Faculty members are restricted from entering End-Sem External Exam marks. End-Sem marks can only be entered by Admin/HOD.");
             }
@@ -80,7 +95,6 @@ public class GradeService {
             if (request.getUt2() != null) record.setUt2(request.getUt2());
             if (request.getInternalScore() != null) record.setInternalScore(request.getInternalScore());
         } else if ("admin".equalsIgnoreCase(userRole)) {
-            // Admin can enter/edit End-Sem External Exam marks (out of 60) and all components
             if (request.getUt1() != null) record.setUt1(request.getUt1());
             if (request.getUt2() != null) record.setUt2(request.getUt2());
             if (request.getInternalScore() != null) record.setInternalScore(request.getInternalScore());
@@ -89,21 +103,40 @@ public class GradeService {
             throw new UnauthorizedAccessException("Students cannot enter or modify exam marks.");
         }
 
-        // Calculate total
         int internal = record.getInternalScore() != null ? record.getInternalScore() : 18;
-        int endSem = record.getEndSemScore() != null ? record.getEndSemScore() : 70;
+        int endSem = record.getEndSemScore() != null ? record.getEndSemScore() : 52;
         int total = Math.min(100, internal + endSem);
         record.setTotalMarks(total);
 
-        if (total >= 90) { record.setLetterGrade("O"); record.setGradePoints(10); }
-        else if (total >= 80) { record.setLetterGrade("A+"); record.setGradePoints(9); }
-        else if (total >= 70) { record.setLetterGrade("A"); record.setGradePoints(8); }
-        else if (total >= 60) { record.setLetterGrade("B+"); record.setGradePoints(7); }
-        else if (total >= 50) { record.setLetterGrade("B"); record.setGradePoints(6); }
-        else { record.setLetterGrade("F"); record.setGradePoints(0); }
+        record.setLetterGrade(calculateSPPULetterGrade(total));
+        record.setGradePoints(calculateSPPUGradePoint(total));
 
         gradeRepository.save(record);
         return "Grade entry updated successfully for student " + request.getRegistrationNumber();
+    }
+
+    private static int calculateSPPUGradePoint(Integer marks) {
+        if (marks == null) return 0;
+        if (marks >= 80) return 10;
+        if (marks >= 70) return 9;
+        if (marks >= 60) return 8;
+        if (marks >= 55) return 7;
+        if (marks >= 50) return 6;
+        if (marks >= 45) return 5;
+        if (marks >= 40) return 4;
+        return 0;
+    }
+
+    private static String calculateSPPULetterGrade(Integer marks) {
+        if (marks == null) return "F";
+        if (marks >= 80) return "O";
+        if (marks >= 70) return "A+";
+        if (marks >= 60) return "A";
+        if (marks >= 55) return "B+";
+        if (marks >= 50) return "B";
+        if (marks >= 45) return "C";
+        if (marks >= 40) return "P";
+        return "F";
     }
 
     private GradeCardDTO.CourseGradeItem createSampleGradeItem(String code, String title, int credits, int ut1, int ut2, int internal, int endSem) {
@@ -117,8 +150,8 @@ public class GradeService {
                 .internalScore(internal)
                 .endSemScore(endSem)
                 .totalMarks(total)
-                .letterGrade(total >= 90 ? "O" : total >= 80 ? "A+" : "A")
-                .gradePoints(total >= 90 ? 10 : total >= 80 ? 9 : 8)
+                .letterGrade(calculateSPPULetterGrade(total))
+                .gradePoints(calculateSPPUGradePoint(total))
                 .build();
     }
 }

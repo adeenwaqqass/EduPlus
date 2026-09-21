@@ -17,65 +17,60 @@ import {
 } from 'lucide-react';
 import './LoginPage.css';
 import logoTwo from '../../assets/logo_two.png';
+import AltchaCaptcha from '../AltchaCaptcha';
+
+import usersData from '../../data/users.json';
 
 export default function LoginPage({ onLoginSuccess, onNavigateToDashboard }) {
-  const [role, setRole] = useState('faculty'); // 'faculty' | 'student'
+  const [role, setRole] = useState('faculty'); // 'faculty' | 'admin' | 'student'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [department, setDepartment] = useState('computer-science');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
   const [alertMessage, setAlertMessage] = useState(null); // { type: 'error'|'success', text: '' }
 
   const getUserObject = (targetRole, targetEmail) => {
-    if (targetRole === 'faculty') {
-      return {
-        name: 'Prof. Sarah Jenkins',
-        shortName: 'SARAH',
-        role: 'faculty',
-        registrationNumber: 'FAC-02',
-        department: 'COMPUTER SCIENCE & ENGINEERING',
-        semester: 'Faculty / Educator',
-        avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
-        email: targetEmail || 'sarah.jenkins@athena.edu'
-      };
-    }
-    if (targetRole === 'admin') {
-      return {
-        name: 'Dr. James Miller (HOD & Admin)',
-        shortName: 'MILLER',
-        role: 'admin',
-        registrationNumber: 'ADM-01',
-        department: 'REGISTRAR & DEAN OFFICE',
-        semester: 'Head of Department / Admin',
-        avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80',
-        email: targetEmail || 'james.miller@athena.edu'
-      };
-    }
-    return {
-      name: 'MR. ADEEN WAQQAS AHMED SHAHZAD AHMED',
-      shortName: 'ADEEN',
-      role: 'student',
-      registrationNumber: '23ACOE1121163',
-      department: 'COMPUTER ENGINEERING',
-      semester: 'Semester VII (WINTER 2026)',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-      email: targetEmail || 'adeen.waqqas@athena.edu'
-    };
-  };
+    const trimmedInput = (targetEmail || '').trim().toLowerCase();
+    
+    // Exact match in database users collection
+    const match = usersData.find(u => 
+      u.email.toLowerCase() === trimmedInput || 
+      u.registrationNumber.toLowerCase() === trimmedInput ||
+      u.id.toLowerCase() === trimmedInput
+    );
 
-  // Quick Demo Accounts
-  const handleQuickDemo = (demoRole, demoEmail, demoDept) => {
-    setRole(demoRole);
-    setEmail(demoEmail);
-    setPassword('••••••••••••');
-    if (demoDept) setDepartment(demoDept);
-    const uObj = getUserObject(demoRole, demoEmail);
-    setAlertMessage({
-      type: 'success',
-      text: `Loaded demo credentials for ${uObj.name}`
-    });
+    if (match) {
+      return {
+        ...match,
+        shortName: match.shortName || match.name.split(' ')[0].toUpperCase()
+      };
+    }
+
+    // Role-based fallback lookup if email matches role pattern
+    const roleMatches = usersData.filter(u => u.role === targetRole);
+    if (roleMatches.length > 0) {
+      const selected = roleMatches[0];
+      return {
+        ...selected,
+        email: targetEmail || selected.email
+      };
+    }
+
+    // Fallback user construction
+    const inferredName = targetEmail ? targetEmail.split('@')[0].replace('.', ' ').toUpperCase() : 'USER';
+    return {
+      name: inferredName,
+      shortName: inferredName.split(' ')[0],
+      role: targetRole,
+      registrationNumber: targetRole === 'student' ? '23ACOE1121001' : 'FAC-01',
+      department: 'COMPUTER ENGINEERING',
+      semester: 'WINTER 2026',
+      avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+      email: targetEmail || 'user@eduplus.edu'
+    };
   };
 
   const handleSubmit = (e) => {
@@ -88,6 +83,10 @@ export default function LoginPage({ onLoginSuccess, onNavigateToDashboard }) {
     }
     if (!password) {
       setAlertMessage({ type: 'error', text: 'Please enter your account password.' });
+      return;
+    }
+    if (!captchaVerified) {
+      setAlertMessage({ type: 'error', text: 'Please complete the ALTCHA CAPTCHA verification check before logging in.' });
       return;
     }
 
@@ -351,6 +350,9 @@ export default function LoginPage({ onLoginSuccess, onNavigateToDashboard }) {
               </label>
             </div>
 
+            {/* ALTCHA CAPTCHA Widget */}
+            <AltchaCaptcha onVerify={(verified) => setCaptchaVerified(verified)} />
+
             {/* Submit Button */}
             <button type="submit" className="submit-btn" disabled={isLoading}>
               {isLoading ? (
@@ -367,41 +369,10 @@ export default function LoginPage({ onLoginSuccess, onNavigateToDashboard }) {
             </button>
           </form>
 
-          {/* Quick Demo Login Presets */}
-          <div className="demo-accounts">
-            <div className="demo-title">Quick Demo Login Presets</div>
-            <div className="demo-buttons">
-              <button
-                type="button"
-                className="demo-pill-btn"
-                onClick={() => handleQuickDemo('faculty', 'sarah.jenkins@eduplus.edu', 'computer-science')}
-              >
-                <Building2 size={14} color="#00a884" />
-                <span>Prof. Sarah (Faculty)</span>
-              </button>
-              <button
-                type="button"
-                className="demo-pill-btn"
-                onClick={() => handleQuickDemo('admin', 'james.miller@eduplus.edu', 'registrar')}
-              >
-                <ShieldCheck size={14} color="#6366f1" />
-                <span>Dr. Miller (HOD & Admin)</span>
-              </button>
-              <button
-                type="button"
-                className="demo-pill-btn"
-                onClick={() => handleQuickDemo('student', 'alex.rivera@student.eduplus.edu', null)}
-              >
-                <GraduationCap size={14} color="#00a884" />
-                <span>Alex R. (Student)</span>
-              </button>
-            </div>
-          </div>
-
           {/* Security Guarantee Footer */}
           <div className="login-security-footer">
             <ShieldCheck size={16} color="#00a884" />
-            <span>256-Bit Encrypted • SSO & EduPlus Achilles 1.0 Security Enabled</span>
+            <span>256-Bit Encrypted • ALTCHA Security Enabled</span>
           </div>
         </div>
       </div>

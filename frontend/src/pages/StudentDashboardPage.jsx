@@ -66,34 +66,34 @@ export default function StudentDashboardPage({ studentData }) {
             <CheckCircle2 size={18} color="#00a884" />
           </div>
           <div style={{ ...styles.statNumber, color: '#047857' }}>{student.attendance}%</div>
-          <span style={{ fontSize: '0.78rem', color: '#047857', fontWeight: 600 }}>Above Mandatory 75%</span>
+          <span style={{ fontSize: '0.78rem', color: '#047857', fontWeight: 600 }}>Above Mandatory 75% Cutoff</span>
         </div>
 
         <div className="card" style={{ ...styles.statCard, borderLeft: '4px solid #0284c7' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={styles.statTitle}>Cumulative GPA</span>
+            <span style={styles.statTitle}>Semester SGPA</span>
             <Award size={18} color="#0284c7" />
           </div>
-          <div style={{ ...styles.statNumber, color: '#0369a1' }}>{student.gpa}</div>
-          <span style={{ fontSize: '0.78rem', color: '#0369a1', fontWeight: 600 }}>Dean's Honor List Candidate</span>
+          <div style={{ ...styles.statNumber, color: '#0369a1' }}>8.25</div>
+          <span style={{ fontSize: '0.78rem', color: '#0369a1', fontWeight: 600 }}>Scale: 10.0 (WINTER 2026)</span>
         </div>
 
-        <div className="card" style={{ ...styles.statCard, borderLeft: '4px solid #8b5cf6' }}>
+        <div className="card" style={{ ...styles.statCard, borderLeft: '4px solid #7c3aed' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={styles.statTitle}>Active Courses</span>
-            <BookOpen size={18} color="#8b5cf6" />
+            <span style={styles.statTitle}>Cumulative CGPA</span>
+            <GraduationCap size={18} color="#7c3aed" />
           </div>
-          <div style={styles.statNumber}>4</div>
-          <span style={{ fontSize: '0.78rem', color: '#64748b' }}>16 Total Credits</span>
+          <div style={{ ...styles.statNumber, color: '#6d28d9' }}>{student.gpa || '7.85'}</div>
+          <span style={{ fontSize: '0.78rem', color: '#6d28d9', fontWeight: 600 }}>UGC 10-Point Scale (First Class)</span>
         </div>
 
         <div className="card" style={{ ...styles.statCard, borderLeft: '4px solid #f59e0b' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={styles.statTitle}>Pending Tasks</span>
-            <Clock size={18} color="#f59e0b" />
+            <span style={styles.statTitle}>Active Courses</span>
+            <BookOpen size={18} color="#f59e0b" />
           </div>
-          <div style={{ ...styles.statNumber, color: '#b45309' }}>3</div>
-          <span style={{ fontSize: '0.78rem', color: '#b45309', fontWeight: 600 }}>Due This Week</span>
+          <div style={{ ...styles.statNumber, color: '#b45309' }}>5</div>
+          <span style={{ fontSize: '0.78rem', color: '#b45309', fontWeight: 600 }}>19 Total Credits Enrolled</span>
         </div>
       </div>
 
@@ -194,6 +194,36 @@ export default function StudentDashboardPage({ studentData }) {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Achilles ML Prescriptive Risk Advisory Card */}
+          <div className="card" style={{ border: '1.5px solid #6366f1', backgroundColor: '#f5f3ff' }}>
+            <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#312e81', marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <TrendingUp size={16} color="#4f46e5" />
+              <span>🤖 Achilles ML Risk Prescriptions</span>
+            </h3>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+              {/* Attendance Advice */}
+              <div style={{ backgroundColor: '#ffffff', padding: '0.65rem', borderRadius: '8px', border: '1px solid #ddd6fe' }}>
+                <div style={{ fontSize: '0.74rem', fontWeight: 800, color: '#00a884', marginBottom: '0.2rem' }}>
+                  📅 Attendance & Detention Risk:
+                </div>
+                <div style={{ fontSize: '0.76rem', color: '#1e293b', lineHeight: '1.4' }}>
+                  Attend <strong>16 lectures</strong> in this/upcoming month to raise attendance <strong>&gt; 75%</strong> and prevent detention.
+                </div>
+              </div>
+
+              {/* UT2 Target Advice */}
+              <div style={{ backgroundColor: '#ffffff', padding: '0.65rem', borderRadius: '8px', border: '1px solid #ddd6fe' }}>
+                <div style={{ fontSize: '0.74rem', fontWeight: 800, color: '#6d28d9', marginBottom: '0.2rem' }}>
+                  🎯 Internal Unit Test 2 Target:
+                </div>
+                <div style={{ fontSize: '0.76rem', color: '#1e293b', lineHeight: '1.4' }}>
+                  If scored <strong>10 / 20 in UT1</strong>, score <strong>16 / 20 in UT2</strong> to raise UT average to <strong>13.0/20</strong>.
+                </div>
+              </div>
             </div>
           </div>
 

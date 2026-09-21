@@ -32,10 +32,13 @@ import {
   UserPlus
 } from 'lucide-react';
 import './FacultyAdmin.css';
+import studentsDataJSON from '../../data/students.json';
+import coursesDataJSON from '../../data/courses.json';
+import facultiesDataJSON from '../../data/faculties.json';
 
-export default function FacultyAdminPage({ onAddNotice, searchTerm = '' }) {
+export default function FacultyAdminPage({ currentUser, onAddNotice, searchTerm = '' }) {
   // Role Context: 'faculty' | 'admin'
-  const [userRole, setUserRole] = useState('faculty');
+  const [userRole, setUserRole] = useState(currentUser?.role === 'admin' ? 'admin' : 'faculty');
 
   // Navigation Tab Context
   // 'classes' | 'marks' | 'analytics' | 'students' | 'admin-allotment' | 'notifications'
@@ -100,92 +103,31 @@ export default function FacultyAdminPage({ onAddNotice, searchTerm = '' }) {
   ]);
 
   // 2. Master Student Data Roster (With Attendance %, Internal Marks, External Marks, Backlogs)
-  const [studentsData, setStudentsData] = useState([
-    {
-      id: 'STU-101',
-      rollNo: '23ACOE1121163',
-      name: 'ADEEN WAQQAS AHMED SHAHZAD',
-      yearCohort: '4th Year / Final',
-      section: 'Class A',
-      attendancePct: 82.5,
-      totalLectures: 40,
-      attendedLectures: 33,
-      internalScore: 36, // out of 40
-      externalScore: 52, // out of 60
-      backlogs: [],
-      department: 'Computer Science'
-    },
-    {
-      id: 'STU-102',
-      rollNo: 'CS-2024-112',
-      name: 'Siddharth Nair',
-      yearCohort: '4th Year / Final',
-      section: 'Class A',
-      attendancePct: 64.5, // DETAILED < 75%
-      totalLectures: 40,
-      attendedLectures: 26,
-      internalScore: 28,
-      externalScore: 44,
-      backlogs: ['CS-201 Data Structures'],
-      department: 'Computer Science'
-    },
-    {
-      id: 'STU-103',
-      rollNo: 'CS-2024-114',
-      name: 'Rohan Deshmukh',
-      yearCohort: '4th Year / Final',
-      section: 'Class A',
-      attendancePct: 91.0,
-      totalLectures: 40,
-      attendedLectures: 36,
-      internalScore: 14, // UNQUALIFIED INTERNAL < 16/40 (40%)
-      externalScore: 48,
-      backlogs: [],
-      department: 'Computer Science'
-    },
-    {
-      id: 'STU-104',
-      rollNo: 'CS-2024-118',
-      name: 'Ananya Sharma',
-      yearCohort: '4th Year / Final',
-      section: 'Class A',
-      attendancePct: 88.0,
-      totalLectures: 40,
-      attendedLectures: 35,
-      internalScore: 38,
-      externalScore: 56,
-      backlogs: [],
-      department: 'Computer Science'
-    },
-    {
-      id: 'STU-105',
-      rollNo: 'CS-2024-122',
-      name: 'Vikramaditya Kulkarni',
-      yearCohort: '4th Year / Final',
-      section: 'Class B',
-      attendancePct: 69.0, // DETAINED < 75%
-      totalLectures: 40,
-      attendedLectures: 27,
-      internalScore: 15, // UNQUALIFIED INTERNAL < 16/40
-      externalScore: 32,
-      backlogs: ['EE-101 Basic Electricals', 'CS-201 Data Structures'],
-      department: 'Computer Science'
-    },
-    {
-      id: 'STU-106',
-      rollNo: 'CS-2024-130',
-      name: 'Pooja Verma',
-      yearCohort: '3rd Year',
-      section: 'Class B',
-      attendancePct: 94.0,
-      totalLectures: 40,
-      attendedLectures: 38,
-      internalScore: 39,
-      externalScore: 58,
-      backlogs: [],
-      department: 'Computer Science'
-    }
-  ]);
+  const initialStudentsData = (studentsDataJSON || []).map((st, idx) => {
+    const totalLectures = 40;
+    const attPct = st.attendancePercentage || 85.0;
+    const attended = Math.round((attPct / 100.0) * totalLectures);
+    const cgpa = st.cgpa || 7.5;
+    const internalScore = Math.round((cgpa / 10.0) * 36);
+    const externalScore = Math.round((cgpa / 10.0) * 54);
+
+    return {
+      id: st.registrationNumber || st.id,
+      rollNo: st.registrationNumber || `COMP-A-${(idx + 1).toString().padStart(2, '0')}`,
+      name: st.name,
+      yearCohort: 'B.Tech / 4th Year',
+      section: `Class ${st.classSection || 'A'}`,
+      attendancePct: attPct,
+      totalLectures,
+      attendedLectures: attended,
+      internalScore,
+      externalScore,
+      backlogs: attPct < 70 ? ['CS702 Cloud Computing'] : [],
+      department: st.branch || 'Computer Engineering'
+    };
+  });
+
+  const [studentsData, setStudentsData] = useState(initialStudentsData);
 
   // ==========================================
   // MODAL STATES
@@ -718,18 +660,23 @@ export default function FacultyAdminPage({ onAddNotice, searchTerm = '' }) {
                 </h3>
                 <p style={{ fontSize: '0.82rem', color: '#64748b', margin: '0.25rem 0 0 0' }}>
                   {userRole === 'faculty' 
-                    ? 'Faculty can enter and edit Internal Exam, Quiz, & Assignment marks (Max 40 marks). Passing cutoff: >= 16/40.' 
-                    : 'Admin can upload External University Final Exam Scores (Max 60 marks) and practical marks.'
+                    ? 'Faculty can enter and edit Internal Exam, Quiz, & Assignment marks (Max 40 marks). Editable within 1 week of submission. Deletion disabled.' 
+                    : 'Admin/HOD can upload and edit External University Final Exam Scores (Max 60 marks) and Internal scores. Editable within 1 week. Deletion disabled.'
                   }
                 </p>
               </div>
-              <button 
-                className="btn btn-secondary"
-                onClick={() => showBanner(`Marks database saved and synchronized!`)}
-              >
-                <Save size={16} />
-                Save & Publish Marks
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <span style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 600 }}>
+                  ⏱️ 1-Week Edit Window • 🚫 Marks Deletion Disabled (Audit Policy)
+                </span>
+                <button 
+                  className="btn btn-secondary"
+                  onClick={() => showBanner(`Marks database saved and synchronized!`)}
+                >
+                  <Save size={16} />
+                  Save & Publish Marks
+                </button>
+              </div>
             </div>
 
             {/* Marks Table */}

@@ -1,46 +1,78 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Mail, BookOpen, UserPlus, X } from 'lucide-react';
 
 export default function FacultyPage({ searchTerm }) {
   const [showModal, setShowModal] = useState(false);
-  const [facultyList, setFacultyList] = useState([
-    {
-      id: 'FAC-01',
-      name: 'Dr. Arthur Pendelton',
-      avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80',
-      department: 'Computer Science',
-      designation: 'Professor & Chair',
-      email: 'a.pendelton@athena.edu',
-      courses: ['CS-301', 'CS-401']
-    },
-    {
-      id: 'FAC-02',
-      name: 'Prof. Sarah Jenkins',
-      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
-      department: 'Physics',
-      designation: 'Associate Professor',
-      email: 's.jenkins@athena.edu',
-      courses: ['PHY-102', 'PHY-201']
-    },
-    {
-      id: 'FAC-03',
-      name: 'Dr. Rachel Green',
-      avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
-      department: 'Biology',
-      designation: 'Assistant Professor',
-      email: 'r.green@athena.edu',
-      courses: ['BIO-204']
-    },
-    {
-      id: 'FAC-04',
-      name: 'Prof. Alan Poe',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-      department: 'English Literature',
-      designation: 'Lecturer',
-      email: 'a.poe@athena.edu',
-      courses: ['LIT-202']
+  const [facultyList, setFacultyList] = useState([]);
+
+  useEffect(() => {
+    async function fetchFaculties() {
+      try {
+        const res = await fetch('http://localhost:8080/api/faculties');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.data && Array.isArray(json.data) && json.data.length > 0) {
+            setFacultyList(json.data.map(f => ({
+              id: f.facultyId,
+              name: f.name,
+              avatar: f.avatar || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+              department: f.department || 'COMPUTER ENGINEERING',
+              designation: f.designation || 'Professor',
+              email: f.email,
+              courses: f.assignedCourses || ['CS701']
+            })));
+            return;
+          }
+        }
+      } catch (err) {
+        console.log('Using local fallback for faculty directory:', err);
+      }
+      // Fallback
+      setFacultyList(getDefaultFacultyList());
     }
-  ]);
+    fetchFaculties();
+  }, []);
+
+  function getDefaultFacultyList() {
+    return [
+      {
+        id: 'FAC-01',
+        name: 'Prof. Sarah Jenkins',
+        avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+        department: 'COMPUTER ENGINEERING',
+        designation: 'Professor & AI Lab In-Charge',
+        email: 'sarah.jenkins@athena.edu',
+        courses: ['CS701', 'CS705P']
+      },
+      {
+        id: 'FAC-02',
+        name: 'Prof. Rajesh Kulkarni',
+        avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+        department: 'COMPUTER ENGINEERING',
+        designation: 'Associate Professor & DevOps Lead',
+        email: 'rajesh.kulkarni@athena.edu',
+        courses: ['CS702']
+      },
+      {
+        id: 'FAC-03',
+        name: 'Dr. Anita Roy',
+        avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
+        department: 'COMPUTER ENGINEERING',
+        designation: 'Associate Professor & CyberSec Lead',
+        email: 'anita.roy@athena.edu',
+        courses: ['CS703']
+      },
+      {
+        id: 'ADM-01',
+        name: 'Dr. James Miller (HOD)',
+        avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80',
+        department: 'COMPUTER ENGINEERING',
+        designation: 'Head of Department & Senior Professor',
+        email: 'james.miller@athena.edu',
+        courses: ['CS704P']
+      }
+    ];
+  }
 
   const [newFaculty, setNewFaculty] = useState({
     name: '',

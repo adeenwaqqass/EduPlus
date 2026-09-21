@@ -207,61 +207,116 @@ export default function CoursesPage({ initialTab = 'student-course-reg', searchT
     }
   }, [initialTab]);
 
-  // Data for Registered Courses
+  // Data for 10 Compulsory B.Tech Computer Engineering Courses
   const [registeredCourses, setRegisteredCourses] = useState([
     {
-      code: 'CS701',
-      title: 'Deep Learning & Neural Networks',
-      category: 'Core Theory',
-      credits: 4,
-      instructor: 'Dr. Arthur Pendelton',
-      slot: 'Mon/Wed 10:00 AM - 11:30 AM',
-      room: 'LT-204 (Tech Building)',
-      status: 'APPROVED',
-      gradeScheme: 'Letter Grade (A-F)'
-    },
-    {
-      code: 'CS702',
-      title: 'Cloud Computing & DevOps Architecture',
-      category: 'Core Theory',
+      code: '23UCOPEL4703B',
+      title: 'BLOCKCHAIN TECHNOLOGY',
+      category: 'Theory (Compulsory)',
       credits: 4,
       instructor: 'Prof. Sarah Jenkins',
-      slot: 'Tue/Thu 02:00 PM - 03:30 PM',
-      room: 'CS-Lab 3',
-      status: 'APPROVED',
+      slot: 'Mon/Wed 10:00 AM - 11:30 AM',
+      room: 'LT-204 (Tech Building)',
+      status: 'APPROVED (COMPULSORY)',
       gradeScheme: 'Letter Grade (A-F)'
     },
     {
-      code: 'CS703',
-      title: 'Cybersecurity & Cryptographic Systems',
-      category: 'Program Elective',
+      code: '23UCOPEP4703B',
+      title: 'BLOCKCHAIN TECHNOLOGY LAB',
+      category: 'Practical (Compulsory)',
+      credits: 2,
+      instructor: 'Dr. Arthur Pendelton',
+      slot: 'Mon 02:00 PM - 04:00 PM',
+      room: 'Blockchain Lab 101',
+      status: 'APPROVED (COMPULSORY)',
+      gradeScheme: 'Practical Grade (A-F)'
+    },
+    {
+      code: '23UCOPCL4713',
+      title: 'CLOUD AND EDGE COMPUTING',
+      category: 'Theory (Compulsory)',
+      credits: 4,
+      instructor: 'Prof. Rajesh Kulkarni',
+      slot: 'Tue/Thu 10:00 AM - 11:30 AM',
+      room: 'LT-102 (Tech Building)',
+      status: 'APPROVED (COMPULSORY)',
+      gradeScheme: 'Letter Grade (A-F)'
+    },
+    {
+      code: '23UCOPCP4713',
+      title: 'CLOUD AND EDGE COMPUTING LAB',
+      category: 'Practical (Compulsory)',
+      credits: 2,
+      instructor: 'Prof. Marcus Vance',
+      slot: 'Tue 02:00 PM - 04:00 PM',
+      room: 'Cloud Server Lab',
+      status: 'APPROVED (COMPULSORY)',
+      gradeScheme: 'Practical Grade (A-F)'
+    },
+    {
+      code: '23UCOPCL4712',
+      title: 'CYBER SECURITY',
+      category: 'Theory (Compulsory)',
       credits: 3,
-      instructor: 'Dr. Rachel Green',
-      slot: 'Fri 09:00 AM - 12:00 PM',
-      room: 'LT-102',
-      status: 'APPROVED',
+      instructor: 'Dr. Anita Roy',
+      slot: 'Wed/Fri 11:30 AM - 01:00 PM',
+      room: 'LT-201 (Main Building)',
+      status: 'APPROVED (COMPULSORY)',
       gradeScheme: 'Letter Grade (A-F)'
     },
     {
-      code: 'CS704P',
-      title: 'Major Project Phase - I (Capstone)',
-      category: 'Practical / Lab',
+      code: '23UCOPCP4712',
+      title: 'CYBER SECURITY LAB',
+      category: 'Practical (Compulsory)',
+      credits: 2,
+      instructor: 'Dr. Emily Noether',
+      slot: 'Wed 02:00 PM - 04:00 PM',
+      room: 'CyberSec Security Lab',
+      status: 'APPROVED (COMPULSORY)',
+      gradeScheme: 'Practical Grade (A-F)'
+    },
+    {
+      code: '23UCOPEL4705C',
+      title: 'DATA MINING AND INFORMATION RETRIEVAL',
+      category: 'Theory (Compulsory)',
+      credits: 3,
+      instructor: 'Prof. Vikram Sharma',
+      slot: 'Thu 02:00 PM - 05:00 PM',
+      room: 'LT-304',
+      status: 'APPROVED (COMPULSORY)',
+      gradeScheme: 'Letter Grade (A-F)'
+    },
+    {
+      code: '23UCOELP4703',
+      title: 'PROJECT',
+      category: 'PROJECT (Compulsory)',
       credits: 6,
-      instructor: 'Prof. Alan Poe & Panel',
+      instructor: 'Dr. James Miller (HOD & Panel)',
       slot: 'Mon/Wed/Fri 02:00 PM - 05:00 PM',
       room: 'Project Innovation Lab',
-      status: 'APPROVED',
+      status: 'APPROVED (COMPULSORY)',
       gradeScheme: 'Pass/Fail + Rubric'
     },
     {
-      code: 'CS705P',
-      title: 'Advanced AI & Machine Learning Lab',
-      category: 'Practical / Lab',
-      credits: 2,
-      instructor: 'Dr. Arthur Pendelton',
-      slot: 'Thu 09:00 AM - 11:00 AM',
-      room: 'GPU Server Cluster Lab',
-      status: 'APPROVED',
+      code: '23UCOELL4804',
+      title: 'RESEARCH METHODOLOGY',
+      category: 'Theory (Compulsory)',
+      credits: 3,
+      instructor: 'Dr. Meera Kulkarni',
+      slot: 'Fri 09:00 AM - 12:00 PM',
+      room: 'Seminar Hall B',
+      status: 'APPROVED (COMPULSORY)',
+      gradeScheme: 'Letter Grade (A-F)'
+    },
+    {
+      code: '23UCOPEL4704D',
+      title: 'SOCIAL NETWORK ANALYSIS',
+      category: 'Theory (Compulsory)',
+      credits: 3,
+      instructor: 'Prof. Sanjay Gupta',
+      slot: 'Sat 09:00 AM - 12:00 PM',
+      room: 'LT-202',
+      status: 'APPROVED (COMPULSORY)',
       gradeScheme: 'Letter Grade (A-F)'
     }
   ]);

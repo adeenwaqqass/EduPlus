@@ -7,9 +7,15 @@ build/
 target/
 *.class
 
+# Python & Notebook cache
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
 # IDE & OS files
 .vscode/
 .idea/
 .DS_Store
 *.log
 *.env
+

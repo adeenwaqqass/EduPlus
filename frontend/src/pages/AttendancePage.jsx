@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import studentsData from '../data/students.json';
 import { 
   Save, 
   Check, 
@@ -56,181 +57,86 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
   // ==========================================
   // STATE 0: STUDENT PORTAL (MY ATTENDANCE)
   // ==========================================
+  const loggedInStudent = (studentsData || []).find(s => 
+    s.id === currentUser?.studentId || 
+    s.registrationNumber === currentUser?.registrationNumber ||
+    s.name?.toLowerCase() === currentUser?.name?.toLowerCase()
+  ) || studentsData[0];
+
   const studentInfo = {
-    name: 'ADEEN WAQQAS AHMED SHAHZAD AHMED',
-    registrationNumber: '23ACOE1121163',
-    academicBatch: '2023-2027',
-    stream: 'Bachelor of Technology - COMPUTER ENGINEERING',
-    classSection: 'A',
-    rollNumber: 'AU/',
-    academicSession: 'WINTER 2026',
+    name: loggedInStudent?.name || currentUser?.name || 'ADEEN WAQQAS AHMED SHAHZAD AHMED',
+    registrationNumber: loggedInStudent?.registrationNumber || loggedInStudent?.id || '23ACOE1121163',
+    academicBatch: loggedInStudent?.academicBatch || '2023-2027',
+    stream: `Bachelor of Technology - ${loggedInStudent?.branch || 'COMPUTER ENGINEERING'}`,
+    classSection: loggedInStudent?.classSection || 'A',
+    rollNumber: loggedInStudent?.rollNumber || 'A01',
+    academicSession: loggedInStudent?.academicSession || 'WINTER 2026',
     totalComponent: 10
   };
 
-  const myAttendanceCourses = [
-    {
-      sNo: 1,
-      course: 'BLOCKCHAIN TECHNOLOGY',
-      component: 'Theory',
-      variant: '23UCOPEL4703B-Bachelor of Technology-23UCOPEL4703B-WINTER 2026-COMP_A',
-      presents: 21,
+  const myAttendanceCourses = OFFICIAL_10_COURSES.map((course, idx) => {
+    const totalLectures = course.totalLectures;
+    const basePct = loggedInStudent?.attendancePercentage || 85;
+    const presents = Math.min(totalLectures, Math.max(0, Math.round((basePct / 100) * totalLectures)));
+    const pctVal = Math.round((presents / totalLectures) * 100);
+
+    return {
+      sNo: idx + 1,
+      course: course.name,
+      component: course.component,
+      variant: `${course.id}-Bachelor of Technology-${course.id}-WINTER 2026-COMP_${loggedInStudent?.classSection || 'A'}`,
+      presents,
       specialAttendance: 0,
-      lectures: 42,
-      percentage: '50%'
-    },
-    {
-      sNo: 2,
-      course: 'BLOCKCHAIN TECHNOLOGY LAB',
-      component: 'Practical',
-      variant: '23UCOPEP4703B-Bachelor of Technology-23UCOPEP4703B-WINTER 2026-COMP_A1',
-      presents: 10,
-      specialAttendance: 0,
-      lectures: 14,
-      percentage: '71%'
-    },
-    {
-      sNo: 3,
-      course: 'CLOUD AND EDGE COMPUTING',
-      component: 'Theory',
-      variant: '23UCOFCL4713-Bachelor of Technology-23UCOFCL4713-WINTER 2026-COMP_A',
-      presents: 15,
-      specialAttendance: 0,
-      lectures: 40,
-      percentage: '38%'
-    },
-    {
-      sNo: 4,
-      course: 'CLOUD AND EDGE COMPUTING LAB',
-      component: 'Practical',
-      variant: '23UCOPCP4713-Bachelor of Technology-23UCOPCP4713-WINTER 2026-COMP_A1',
-      presents: 6,
-      specialAttendance: 0,
-      lectures: 13,
-      percentage: '46%'
-    },
-    {
-      sNo: 5,
-      course: 'CYBER SECURITY',
-      component: 'Theory',
-      variant: '23UCOPCL4712-Bachelor of Technology-23UCOPCL4712-WINTER 2026-COMP_A',
-      presents: 22,
-      specialAttendance: 0,
-      lectures: 38,
-      percentage: '58%'
-    },
-    {
-      sNo: 6,
-      course: 'CYBER SECURITY LAB',
-      component: 'Practical',
-      variant: '23UCOPCP4712-Bachelor of Technology-23UCOPCP4712-WINTER 2026-COMP_A1',
-      presents: 6,
-      specialAttendance: 0,
-      lectures: 13,
-      percentage: '46%'
-    },
-    {
-      sNo: 7,
-      course: 'DATA MINING AND INFORMATION RETRIEVAL',
-      component: 'Theory',
-      variant: '23UCOPEL4705C-Bachelor of Technology-23UCOPEL4705C-WINTER 2026-COMP_A',
-      presents: 20,
-      specialAttendance: 0,
-      lectures: 40,
-      percentage: '50%'
-    },
-    {
-      sNo: 8,
-      course: 'PROJECT',
-      component: 'PROJECT',
-      variant: '23UCOELP4703-Bachelor of Technology-23UCOELP4703-WINTER 2026-COMP_A',
-      presents: 8,
-      specialAttendance: 0,
-      lectures: 11,
-      percentage: '73%'
-    },
-    {
-      sNo: 9,
-      course: 'RESEARCH METHODOLOGY',
-      component: 'Theory',
-      variant: '23UCOELL4804-Bachelor of Technology-23UCOELL4804-WINTER 2026-COMP_A',
-      presents: 14,
-      specialAttendance: 0,
-      lectures: 38,
-      percentage: '37%'
-    },
-    {
-      sNo: 10,
-      course: 'SOCIAL NETWORK ANALYSIS',
-      component: 'Theory',
-      variant: '23UCOPEL4704D-Bachelor of Technology-23UCOPEL4704D-WINTER 2026-COMP_A',
-      presents: 17,
-      specialAttendance: 0,
-      lectures: 41,
-      percentage: '41%'
-    }
-  ];
+      lectures: totalLectures,
+      percentage: `${pctVal}%`
+    };
+  });
 
   // ==========================================
   // STATE FOR FACULTY CLASS ATTENDANCE VIEW
   // ==========================================
-  const [selectedSubject, setSelectedSubject] = useState('cs701');
+  const OFFICIAL_10_COURSES = [
+    { id: '23UCOPEL4703B', code: 'CS701', name: 'BLOCKCHAIN TECHNOLOGY', component: 'Theory', totalLectures: 43 },
+    { id: '23UCOPEP4703B', code: 'CS701P', name: 'BLOCKCHAIN TECHNOLOGY LAB', component: 'Practical', totalLectures: 14 },
+    { id: '23UCOPCL4713', code: 'CS702', name: 'CLOUD AND EDGE COMPUTING', component: 'Theory', totalLectures: 40 },
+    { id: '23UCOPCP4713', code: 'CS702P', name: 'CLOUD AND EDGE COMPUTING LAB', component: 'Practical', totalLectures: 13 },
+    { id: '23UCOPCL4712', code: 'CS703', name: 'CYBER SECURITY & CRYPTOGRAPHY', component: 'Theory', totalLectures: 39 },
+    { id: '23UCOPCP4712', code: 'CS703P', name: 'CYBER SECURITY LAB', component: 'Practical', totalLectures: 13 },
+    { id: '23UCOPEL4705C', code: 'CS704', name: 'DATA MINING & INFO RETRIEVAL', component: 'Theory', totalLectures: 41 },
+    { id: '23UCOELP4703', code: 'CS705P', name: 'MAJOR PROJECT PHASE - I', component: 'PROJECT', totalLectures: 12 },
+    { id: '23UCOELL4804', code: 'CS706', name: 'RESEARCH METHODOLOGY', component: 'Theory', totalLectures: 40 },
+    { id: '23UCOPEL4704D', code: 'CS707', name: 'SOCIAL NETWORK ANALYSIS', component: 'Theory', totalLectures: 41 }
+  ];
+
+  const CLASS_DIVISIONS = [
+    { id: 'A', label: 'Div A (65 Students - B.Tech COMP)', code: 'Sec A (WINTER 2026)' },
+    { id: 'B', label: 'Div B (65 Students - B.Tech COMP)', code: 'Sec B (WINTER 2026)' },
+    { id: 'C', label: 'Div C (65 Students - B.Tech COMP)', code: 'Sec C (WINTER 2026)' },
+    { id: 'D', label: 'Div D (65 Students - B.Tech COMP)', code: 'Sec D (WINTER 2026)' }
+  ];
+
+  const [selectedSubject, setSelectedSubject] = useState('23UCOPEL4703B');
+  const [selectedDivision, setSelectedDivision] = useState('A');
+  const [attendanceDate, setAttendanceDate] = useState('2026-09-22');
   const [facultySearchTerm, setFacultySearchTerm] = useState('');
+  const [attendanceOverrideMap, setAttendanceOverrideMap] = useState({});
 
-  const [facultySubjects, setFacultySubjects] = useState([
-    { id: 'cs701', code: 'CS701', name: 'BLOCKCHAIN TECHNOLOGY', section: 'Sec A (WINTER 2026)', totalLectures: 42 },
-    { id: 'cs702', code: 'CS702', name: 'CLOUD AND EDGE COMPUTING', section: 'Sec B (WINTER 2026)', totalLectures: 40 },
-    { id: 'cs703', code: 'CS703', name: 'CYBER SECURITY & CRYPTOGRAPHY', section: 'Sec A (WINTER 2026)', totalLectures: 38 },
-    { id: 'cs704', code: 'CS704', name: 'DATA MINING & INFO RETRIEVAL', section: 'Sec C (WINTER 2026)', totalLectures: 40 },
-    { id: 'cs705', code: 'CS705', name: 'DEEP LEARNING & NEURAL NETWORKS', section: 'Sec A (WINTER 2026)', totalLectures: 44 }
-  ]);
+  const handleToggleStudentStatus = (regId, newStatus) => {
+    const key = `${selectedSubject}_${selectedDivision}_${attendanceDate}_${regId}`;
+    const currentCourse = OFFICIAL_10_COURSES.find(c => c.id === selectedSubject) || OFFICIAL_10_COURSES[0];
+    const st = currentRosterStudents.find(s => s.regId === regId);
+    if (!st) return;
 
-  const [classAttendanceData, setClassAttendanceData] = useState({
-    cs701: [
-      { id: '23ACOE1121163', name: 'ADEEN WAQQAS AHMED SHAHZAD AHMED', rollNo: 'COMP-A-01', section: 'A', presents: 38, total: 42, percentage: 90.5, todayStatus: 'PRESENT', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80' },
-      { id: 'CS-2024-089', name: 'Elena Rostova', rollNo: 'COMP-A-02', section: 'A', presents: 39, total: 42, percentage: 92.8, todayStatus: 'PRESENT', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80' },
-      { id: 'CS-2024-112', name: 'Siddharth Nair', rollNo: 'COMP-A-03', section: 'A', presents: 27, total: 42, percentage: 64.2, todayStatus: 'ABSENT', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80' },
-      { id: 'PHY-2023-012', name: 'Marcus Aurelius', rollNo: 'COMP-A-04', section: 'A', presents: 31, total: 42, percentage: 73.8, todayStatus: 'LATE', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80' },
-      { id: 'LIT-2025-441', name: 'Lydia Vance', rollNo: 'COMP-A-05', section: 'A', presents: 40, total: 42, percentage: 95.2, todayStatus: 'PRESENT', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80' },
-      { id: 'BIO-2026-004', name: 'Gabriela Cortese', rollNo: 'COMP-A-06', section: 'A', presents: 36, total: 42, percentage: 85.7, todayStatus: 'PRESENT', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80' },
-      { id: 'EE-2024-055', name: 'Rohan Sharma', rollNo: 'COMP-A-07', section: 'A', presents: 29, total: 42, percentage: 69.0, todayStatus: 'ABSENT', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80' },
-      { id: 'CS-2024-099', name: 'Aisha Khan', rollNo: 'COMP-A-08', section: 'A', presents: 35, total: 42, percentage: 83.3, todayStatus: 'PRESENT', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80' }
-    ],
-    cs702: [
-      { id: '23ACOE1121163', name: 'ADEEN WAQQAS AHMED SHAHZAD AHMED', rollNo: 'COMP-B-01', section: 'B', presents: 32, total: 40, percentage: 80.0, todayStatus: 'PRESENT', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80' },
-      { id: 'CS-2024-089', name: 'Elena Rostova', rollNo: 'COMP-B-02', section: 'B', presents: 37, total: 40, percentage: 92.5, todayStatus: 'PRESENT', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80' },
-      { id: 'CS-2024-112', name: 'Siddharth Nair', rollNo: 'COMP-B-03', section: 'B', presents: 24, total: 40, percentage: 60.0, todayStatus: 'ABSENT', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80' }
-    ],
-    cs703: [
-      { id: '23ACOE1121163', name: 'ADEEN WAQQAS AHMED SHAHZAD AHMED', rollNo: 'COMP-A-01', section: 'A', presents: 34, total: 38, percentage: 89.4, todayStatus: 'PRESENT', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80' },
-      { id: 'PHY-2023-012', name: 'Marcus Aurelius', rollNo: 'COMP-A-04', section: 'A', presents: 28, total: 38, percentage: 73.6, todayStatus: 'PRESENT', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80' }
-    ],
-    cs704: [
-      { id: '23ACOE1121163', name: 'ADEEN WAQQAS AHMED SHAHZAD AHMED', rollNo: 'COMP-C-01', section: 'C', presents: 35, total: 40, percentage: 87.5, todayStatus: 'PRESENT', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80' }
-    ],
-    cs705: [
-      { id: '23ACOE1121163', name: 'ADEEN WAQQAS AHMED SHAHZAD AHMED', rollNo: 'COMP-A-01', section: 'A', presents: 41, total: 44, percentage: 93.1, todayStatus: 'PRESENT', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80' }
-    ]
-  });
+    let newPresents = st.presents;
+    if (st.todayStatus !== 'PRESENT' && newStatus === 'PRESENT') newPresents = Math.min(currentCourse.totalLectures, newPresents + 1);
+    if (st.todayStatus === 'PRESENT' && newStatus !== 'PRESENT') newPresents = Math.max(0, newPresents - 1);
 
-  const handleToggleStudentStatus = (subjectId, studentId, newStatus) => {
-    setClassAttendanceData(prev => ({
+    setAttendanceOverrideMap(prev => ({
       ...prev,
-      [subjectId]: prev[subjectId]?.map(st => {
-        if (st.id === studentId) {
-          const oldStatus = st.todayStatus;
-          let newPresents = st.presents;
-          if (oldStatus !== 'PRESENT' && newStatus === 'PRESENT') newPresents += 1;
-          if (oldStatus === 'PRESENT' && newStatus !== 'PRESENT') newPresents = Math.max(0, newPresents - 1);
-          const newPct = parseFloat(((newPresents / st.total) * 100).toFixed(1));
-          return {
-            ...st,
-            presents: newPresents,
-            percentage: newPct,
-            todayStatus: newStatus
-          };
-        }
-        return st;
-      })
+      [key]: {
+        presents: newPresents,
+        todayStatus: newStatus
+      }
     }));
   };
 
@@ -257,16 +163,13 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
   const [selectedClassForAttendance, setSelectedClassForAttendance] = useState(null);
   const [classRosterSearchTerm, setClassRosterSearchTerm] = useState('');
 
-  const defaultClassRoster = [
-    { id: '23ACOE1121163', name: 'ADEEN WAQQAS AHMED SHAHZAD AHMED', rollNo: 'COMP-A-01', dept: 'Computer Engineering', isPresent: true },
-    { id: 'CS-2024-089', name: 'Elena Rostova', rollNo: 'COMP-A-02', dept: 'Computer Science', isPresent: true },
-    { id: 'CS-2024-112', name: 'Siddharth Nair', rollNo: 'COMP-A-03', dept: 'Computer Science', isPresent: false },
-    { id: 'PHY-2023-012', name: 'Marcus Aurelius', rollNo: 'COMP-A-04', dept: 'Physics & EE', isPresent: true },
-    { id: 'LIT-2025-441', name: 'Lydia Vance', rollNo: 'COMP-A-05', dept: 'Data Science', isPresent: true },
-    { id: 'BIO-2026-004', name: 'Gabriela Cortese', rollNo: 'COMP-A-06', dept: 'Biotechnology', isPresent: false },
-    { id: 'EE-2024-055', name: 'Rohan Sharma', rollNo: 'COMP-A-07', dept: 'Electrical Engineering', isPresent: true },
-    { id: 'CS-2024-099', name: 'Aisha Khan', rollNo: 'COMP-A-08', dept: 'Computer Science', isPresent: true }
-  ];
+  const defaultClassRoster = (studentsData || []).slice(0, 65).map((st, idx) => ({
+    id: st.registrationNumber || st.id,
+    name: st.name,
+    rollNo: `COMP-A-${(idx + 1).toString().padStart(2, '0')}`,
+    dept: st.branch || 'Computer Engineering',
+    isPresent: (st.attendancePercentage || 85) >= 75
+  }));
 
   const [classStudentsMap, setClassStudentsMap] = useState({});
 
@@ -391,15 +294,15 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
   const [selectedDate, setSelectedDate] = useState('Oct 08, 2026');
   const [savedSuccess, setSavedSuccess] = useState(false);
 
-  const [trackerStudents, setTrackerStudents] = useState([
-    { id: 'CS-2024-089', name: 'Elena Rostova', department: 'Computer Science', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80', status: 'PRESENT' },
-    { id: 'PHY-2023-012', name: 'Marcus Aurelius', department: 'Physics & EE', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', status: 'LATE' },
-    { id: 'LIT-2025-441', name: 'Lydia Vance', department: 'Data Science', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80', status: 'PRESENT' },
-    { id: 'CS-2024-112', name: 'Siddharth Nair', department: 'Computer Science', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', status: 'ABSENT' },
-    { id: 'BIO-2026-004', name: 'Gabriela Cortese', department: 'Biotechnology', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', status: 'PRESENT' },
-    { id: 'EE-2024-055', name: 'Rohan Sharma', department: 'Electrical Eng', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80', status: 'PRESENT' },
-    { id: 'CS-2024-099', name: 'Aisha Khan', department: 'Computer Science', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', status: 'ABSENT' }
-  ]);
+  const initialTrackerStudents = (studentsData || []).slice(0, 10).map((st, idx) => ({
+    id: st.registrationNumber || st.id,
+    name: st.name,
+    department: st.branch || 'Computer Engineering',
+    avatar: st.avatar || `https://randomuser.me/api/portraits/men/${idx + 1}.jpg`,
+    status: (st.attendancePercentage || 85) >= 75 ? 'PRESENT' : ((st.attendancePercentage || 85) >= 65 ? 'LATE' : 'ABSENT')
+  }));
+
+  const [trackerStudents, setTrackerStudents] = useState(initialTrackerStudents);
 
   const updateTrackerStatus = (id, newStatus) => {
     setTrackerStudents(trackerStudents.map(s => s.id === id ? { ...s, status: newStatus } : s));
@@ -418,14 +321,25 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
   // STATE 2: ATTENDANCE SUMMARY LOGS
   // ==========================================
   const [selectedDeptFilter, setSelectedDeptFilter] = useState('all');
-  const [summaryLogs, setSummaryLogs] = useState([
-    { id: 'CS-2024-089', name: 'Elena Rostova', department: 'Computer Science', year: 'Junior', attended: 38, total: 42, percentage: 90.5, riskLevel: 'Good' },
-    { id: 'CS-2024-112', name: 'Siddharth Nair', department: 'Computer Science', year: 'Junior', attended: 27, total: 42, percentage: 64.2, riskLevel: 'High Risk' },
-    { id: 'PHY-2023-012', name: 'Marcus Aurelius', department: 'Physics & EE', year: 'Senior', attended: 31, total: 42, percentage: 73.8, riskLevel: 'Warning' },
-    { id: 'LIT-2025-441', name: 'Lydia Vance', department: 'Data Science', year: 'Sophomore', attended: 40, total: 42, percentage: 95.2, riskLevel: 'Good' },
-    { id: 'BIO-2026-004', name: 'Gabriela Cortese', department: 'Biotechnology', year: 'Freshman', attended: 36, total: 42, percentage: 85.7, riskLevel: 'Good' },
-    { id: 'EE-2024-055', name: 'Rohan Sharma', department: 'Electrical Eng', year: 'Junior', attended: 29, total: 42, percentage: 69.0, riskLevel: 'High Risk' }
-  ]);
+  const initialSummaryLogs = (studentsData || []).slice(0, 15).map((st) => {
+    const total = 42;
+    const pct = st.attendancePercentage || 85;
+    const attended = Math.round((pct / 100) * total);
+    const riskLevel = pct < 70 ? 'High Risk' : (pct < 80 ? 'Warning' : 'Good');
+
+    return {
+      id: st.registrationNumber || st.id,
+      name: st.name,
+      department: st.branch || 'Computer Engineering',
+      year: 'Senior (B.Tech)',
+      attended,
+      total,
+      percentage: pct,
+      riskLevel
+    };
+  });
+
+  const [summaryLogs, setSummaryLogs] = useState(initialSummaryLogs);
 
   // ==========================================
   // STATE 3: STUDENT LEAVE APPLICATIONS
@@ -531,11 +445,50 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
     setShowApplyLeaveModal(false);
   };
 
-  const currentSubObj = facultySubjects.find(s => s.id === selectedSubject);
-  const currentStudents = classAttendanceData[selectedSubject] || [];
-  const filteredFacultyStudents = currentStudents.filter(s =>
+  const currentSubObj = OFFICIAL_10_COURSES.find(s => s.id === selectedSubject) || OFFICIAL_10_COURSES[0];
+
+  // Filter exactly 65 students belonging to selected class division (Div A, Div B, Div C, Div D)
+  const currentDivisionStudents = (studentsData || []).filter(
+    s => (s.classSection || 'A').toUpperCase() === selectedDivision
+  );
+
+  const currentRosterStudents = currentDivisionStudents.map((st, idx) => {
+    const regId = st.registrationNumber || st.id;
+    const key = `${selectedSubject}_${selectedDivision}_${attendanceDate}_${regId}`;
+    const override = attendanceOverrideMap[key];
+
+    const totalLectures = currentSubObj.totalLectures || 40;
+    const basePct = st.attendancePercentage || 85;
+    const basePresents = Math.min(totalLectures, Math.max(0, Math.round((basePct / 100) * totalLectures)));
+
+    // When marking attendance for a specific date (today), default checkboxes to unchecked ('ABSENT') unless overridden
+    const todayStatus = override?.todayStatus !== undefined ? override.todayStatus : 'ABSENT';
+    const presents = override?.presents !== undefined ? override.presents : (todayStatus === 'PRESENT' ? basePresents : Math.max(0, basePresents - 1));
+    const percentage = parseFloat(((presents / totalLectures) * 100).toFixed(1));
+
+    return {
+      regId,
+      name: st.name,
+      rollNo: st.rollNumber ? `COMP-${selectedDivision}-${st.rollNumber}` : `COMP-${selectedDivision}-${(idx + 1).toString().padStart(2, '0')}`,
+      section: selectedDivision,
+      totalLectures,
+      presents,
+      percentage,
+      todayStatus
+    };
+  });
+
+  const handleSaveClassAttendanceToDatabase = () => {
+    const presentStudents = currentRosterStudents.filter(s => s.todayStatus === 'PRESENT');
+    const presentCount = presentStudents.length;
+    const absentCount = currentRosterStudents.length - presentCount;
+
+    showBanner(`🎉 Attendance for Div ${selectedDivision} (${currentSubObj?.name}) on ${attendanceDate} saved successfully to database! (${presentCount} Present, ${absentCount} Absent)`);
+  };
+
+  const filteredFacultyStudents = currentRosterStudents.filter(s =>
     s.name.toLowerCase().includes((facultySearchTerm || searchTerm).toLowerCase()) ||
-    s.id.toLowerCase().includes((facultySearchTerm || searchTerm).toLowerCase()) ||
+    s.regId.toLowerCase().includes((facultySearchTerm || searchTerm).toLowerCase()) ||
     s.rollNo.toLowerCase().includes((facultySearchTerm || searchTerm).toLowerCase())
   );
 
@@ -1447,6 +1400,7 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
 
             {isFaculty ? (
               <div style={{ marginTop: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                {/* Blue Option / Subject Pills Bar */}
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -1458,12 +1412,12 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
                   boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
                   overflowX: 'auto'
                 }}>
-                  <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em', marginRight: '0.5rem', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                    <BookOpen size={16} color="#00a884" />
-                    Select Subject:
+                  <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#0284c7', textTransform: 'uppercase', letterSpacing: '0.04em', marginRight: '0.5rem', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                    <BookOpen size={16} color="#0284c7" />
+                    SELECT SUBJECT:
                   </span>
 
-                  {facultySubjects.map(sub => {
+                  {OFFICIAL_10_COURSES.map(sub => {
                     const isSelected = selectedSubject === sub.id;
                     return (
                       <button
@@ -1475,7 +1429,7 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
                           gap: '0.55rem',
                           padding: '0.55rem 1.1rem',
                           borderRadius: '10px',
-                          border: isSelected ? '1.5px solid #00a884' : '1px solid #e2e8f0',
+                          border: isSelected ? '2px solid #00a884' : '1px solid #e2e8f0',
                           backgroundColor: isSelected ? '#e6f7f3' : '#f8fafc',
                           color: isSelected ? '#00a884' : '#475569',
                           fontSize: '0.84rem',
@@ -1487,7 +1441,7 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
                         }}
                       >
                         <span style={{
-                          backgroundColor: isSelected ? '#00a884' : '#94a3b8',
+                          backgroundColor: isSelected ? '#00a884' : '#64748b',
                           color: '#ffffff',
                           fontSize: '0.7rem',
                           fontWeight: '800',
@@ -1510,76 +1464,101 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
                         Class Attendance Roster — {currentSubObj?.name} ({currentSubObj?.code})
                       </h3>
                       <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.2rem' }}>
-                        Total Conducted Lectures: <strong>{currentSubObj?.totalLectures}</strong> • Section: <strong>{currentSubObj?.section}</strong> • Enrolled Students: <strong>{currentStudents.length}</strong>
+                        Total Conducted Lectures: <strong>{currentSubObj?.totalLectures}</strong> • Division: <strong>Div {selectedDivision} (WINTER 2026)</strong> • Enrolled Students: <strong>{filteredFacultyStudents.length} / 65</strong>
                       </div>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                      {/* Subject Selection Dropdown (Replacing standard search bar as requested) */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
+                      {/* Shorter Red Box Class Division Selection Dropdown as requested */}
                       <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.45rem',
+                        gap: '0.35rem',
                         backgroundColor: '#ffffff',
-                        border: '1.5px solid #00a884',
+                        border: '2px solid #ef4444',
                         borderRadius: '8px',
-                        padding: '0.45rem 0.85rem',
-                        boxShadow: '0 2px 8px rgba(0, 168, 132, 0.12)'
+                        padding: '0.4rem 0.65rem',
+                        boxShadow: '0 2px 8px rgba(239, 68, 68, 0.15)'
                       }}>
-                        <BookOpen size={16} color="#00a884" />
-                        <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#64748b' }}>Select Subject:</span>
+                        <Users size={15} color="#dc2626" />
+                        <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#dc2626' }}>Class:</span>
                         <select
-                          value={selectedSubject}
-                          onChange={(e) => setSelectedSubject(e.target.value)}
+                          value={selectedDivision}
+                          onChange={(e) => setSelectedDivision(e.target.value)}
                           style={{
                             border: 'none',
                             outline: 'none',
-                            fontSize: '0.86rem',
+                            fontSize: '0.84rem',
                             fontWeight: 800,
                             color: '#0f172a',
                             backgroundColor: 'transparent',
                             cursor: 'pointer',
-                            paddingRight: '0.5rem'
+                            maxWidth: '100px'
                           }}
                         >
-                          {facultySubjects.map(sub => (
-                            <option key={sub.id} value={sub.id}>
-                              {sub.code} - {sub.name} ({sub.section})
+                          {CLASS_DIVISIONS.map(div => (
+                            <option key={div.id} value={div.id}>
+                              Div {div.id}
                             </option>
                           ))}
                         </select>
                       </div>
 
-                      {/* Optional Student Search Box */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', backgroundColor: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '0.45rem 0.65rem' }}>
+                      {/* Date Selection Button / Input beside Class Dropdown as requested */}
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                        backgroundColor: '#ffffff',
+                        border: '1.5px solid #00a884',
+                        borderRadius: '8px',
+                        padding: '0.4rem 0.65rem',
+                        boxShadow: '0 2px 8px rgba(0, 168, 132, 0.12)'
+                      }}>
+                        <Calendar size={15} color="#00a884" />
+                        <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#00a884' }}>Date:</span>
+                        <input
+                          type="date"
+                          value={attendanceDate}
+                          onChange={(e) => setAttendanceDate(e.target.value)}
+                          style={{
+                            border: 'none',
+                            outline: 'none',
+                            fontSize: '0.82rem',
+                            fontWeight: 800,
+                            color: '#0f172a',
+                            backgroundColor: 'transparent',
+                            cursor: 'pointer'
+                          }}
+                        />
+                      </div>
+
+                      {/* Student Search Box */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', backgroundColor: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '0.4rem 0.65rem' }}>
                         <Search size={14} color="#94a3b8" />
                         <input
                           type="text"
                           placeholder="Filter student..."
                           value={facultySearchTerm}
                           onChange={e => setFacultySearchTerm(e.target.value)}
-                          style={{ border: 'none', outline: 'none', fontSize: '0.82rem', color: '#0f172a', width: '130px' }}
+                          style={{ border: 'none', outline: 'none', fontSize: '0.82rem', color: '#0f172a', width: '120px' }}
                         />
                       </div>
 
                       <button
                         onClick={() => {
-                          setClassAttendanceData(prev => ({
-                            ...prev,
-                            [selectedSubject]: prev[selectedSubject]?.map(s => {
-                              const oldStatus = s.todayStatus;
-                              let newPresents = s.presents;
-                              if (oldStatus !== 'PRESENT') newPresents += 1;
-                              const newPct = parseFloat(((newPresents / s.total) * 100).toFixed(1));
-                              return {
-                                ...s,
-                                presents: newPresents,
-                                percentage: newPct,
-                                todayStatus: 'PRESENT'
-                              };
-                            })
-                          }));
-                          showBanner(`🎉 All students marked PRESENT for ${currentSubObj?.name}!`);
+                          const newOverrides = { ...attendanceOverrideMap };
+                          currentRosterStudents.forEach(st => {
+                            const key = `${selectedSubject}_${selectedDivision}_${attendanceDate}_${st.regId}`;
+                            let newPresents = st.presents;
+                            if (st.todayStatus !== 'PRESENT') newPresents = Math.min(st.totalLectures, newPresents + 1);
+                            newOverrides[key] = {
+                              presents: newPresents,
+                              todayStatus: 'PRESENT'
+                            };
+                          });
+                          setAttendanceOverrideMap(newOverrides);
+                          showBanner(`🎉 All 65 students of Div ${selectedDivision} marked PRESENT for ${currentSubObj?.name} on ${attendanceDate}!`);
                         }}
                         style={{
                           display: 'flex',
@@ -1589,7 +1568,7 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
                           color: '#ffffff',
                           border: 'none',
                           borderRadius: '8px',
-                          padding: '0.5rem 0.9rem',
+                          padding: '0.45rem 0.85rem',
                           fontSize: '0.82rem',
                           fontWeight: 700,
                           cursor: 'pointer',
@@ -1608,14 +1587,14 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
                         <tr style={{ backgroundColor: '#1e293b', color: '#ffffff' }}>
                           <th style={{ ...styles.th, backgroundColor: '#1e293b', color: '#ffffff', width: '50px', textAlign: 'center' }}>S.No.</th>
                           <th style={{ ...styles.th, backgroundColor: '#1e293b', color: '#ffffff', textAlign: 'center', width: '150px' }}>
-                            Mark Present
+                            MARK PRESENT
                           </th>
-                          <th style={{ ...styles.th, backgroundColor: '#1e293b', color: '#ffffff' }}>Student Name</th>
-                          <th style={{ ...styles.th, backgroundColor: '#1e293b', color: '#ffffff' }}>Registration ID</th>
-                          <th style={{ ...styles.th, backgroundColor: '#1e293b', color: '#ffffff', textAlign: 'center' }}>Conducted Lectures</th>
-                          <th style={{ ...styles.th, backgroundColor: '#1e293b', color: '#ffffff', textAlign: 'center' }}>Attended Lectures</th>
-                          <th style={{ ...styles.th, backgroundColor: '#1e293b', color: '#ffffff', textAlign: 'center' }}>Attendance %</th>
-                          <th style={{ ...styles.th, backgroundColor: '#1e293b', color: '#ffffff', textAlign: 'center' }}>Action / Alert</th>
+                          <th style={{ ...styles.th, backgroundColor: '#1e293b', color: '#ffffff' }}>STUDENT NAME</th>
+                          <th style={{ ...styles.th, backgroundColor: '#1e293b', color: '#ffffff' }}>REGISTRATION ID</th>
+                          <th style={{ ...styles.th, backgroundColor: '#1e293b', color: '#ffffff', textAlign: 'center' }}>CONDUCTED LECTURES</th>
+                          <th style={{ ...styles.th, backgroundColor: '#1e293b', color: '#ffffff', textAlign: 'center' }}>ATTENDED LECTURES</th>
+                          <th style={{ ...styles.th, backgroundColor: '#1e293b', color: '#ffffff', textAlign: 'center' }}>ATTENDANCE %</th>
+                          <th style={{ ...styles.th, backgroundColor: '#1e293b', color: '#ffffff', textAlign: 'center' }}>ACTION / ALERT</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1625,7 +1604,7 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
                           const isChecked = student.todayStatus === 'PRESENT';
 
                           return (
-                            <tr key={student.id} style={{ ...styles.tr, backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
+                            <tr key={student.regId} style={{ ...styles.tr, backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
                               <td style={{ ...styles.td, textAlign: 'center', fontWeight: '700', color: '#64748b' }}>{idx + 1}</td>
                               
                               {/* Present Attendance Checkbox Column */}
@@ -1635,8 +1614,7 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
                                     type="checkbox"
                                     checked={isChecked}
                                     onChange={() => handleToggleStudentStatus(
-                                      selectedSubject, 
-                                      student.id, 
+                                      student.regId, 
                                       isChecked ? 'ABSENT' : 'PRESENT'
                                     )}
                                     style={{
@@ -1663,11 +1641,11 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
                               <td style={styles.td}>
                                 <div>
                                   <div style={{ fontWeight: '800', color: '#0f172a', fontSize: '0.9rem' }}>{student.name}</div>
-                                  <div style={{ fontSize: '0.74rem', color: '#64748b' }}>Section {student.section} • {student.rollNo}</div>
+                                  <div style={{ fontSize: '0.74rem', color: '#64748b' }}>Section Div {student.section} • {student.rollNo}</div>
                                 </div>
                               </td>
-                              <td style={styles.tdId}>{student.id}</td>
-                              <td style={{ ...styles.td, textAlign: 'center', fontWeight: '700', color: '#0f172a' }}>{student.total}</td>
+                              <td style={styles.tdId}>{student.regId}</td>
+                              <td style={{ ...styles.td, textAlign: 'center', fontWeight: '700', color: '#0f172a' }}>{student.totalLectures}</td>
                               <td style={{ ...styles.td, textAlign: 'center', fontWeight: '800', color: '#00a884' }}>{student.presents}</td>
                               <td style={{ ...styles.td, textAlign: 'center' }}>
                                 <span style={{
@@ -1685,7 +1663,7 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
                               <td style={{ ...styles.td, textAlign: 'center' }}>
                                 {isAtRisk ? (
                                   <button
-                                    onClick={() => alert(`Warning alert sent to ${student.name} (${student.id}) for Low Attendance (${student.percentage}%).`)}
+                                    onClick={() => showBanner(`⚠️ Warning alert notification sent to ${student.name} (${student.regId}) for low attendance (${student.percentage}%).`, 'error')}
                                     style={styles.sendWarningBtn}
                                   >
                                     <Send size={13} />
@@ -1700,6 +1678,44 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
                         })}
                       </tbody>
                     </table>
+                  </div>
+
+                  {/* Save Attendance Button Footer as requested */}
+                  <div style={{
+                    padding: '1.25rem 1.5rem',
+                    backgroundColor: '#f8fafc',
+                    borderTop: '1px solid #e2e8f0',
+                    display: 'flex',
+                    justify: 'space-between',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                    gap: '1rem'
+                  }}>
+                    <div style={{ fontSize: '0.85rem', color: '#475569', fontWeight: 600 }}>
+                      📋 Marking Attendance: <strong>Div {selectedDivision}</strong> • Date: <strong>{attendanceDate}</strong> • Subject: <strong>{currentSubObj?.name} ({currentSubObj?.code})</strong>
+                    </div>
+
+                    <button
+                      onClick={handleSaveClassAttendanceToDatabase}
+                      style={{
+                        backgroundColor: '#00a884',
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: '10px',
+                        padding: '0.75rem 1.75rem',
+                        fontSize: '0.95rem',
+                        fontWeight: 800,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.6rem',
+                        cursor: 'pointer',
+                        boxShadow: '0 4px 14px rgba(0, 168, 132, 0.4)',
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      <Save size={18} />
+                      <span>Save & Submit Class Attendance</span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -1807,79 +1823,125 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
 
                   <div style={styles.chartFieldset}>
                     <div style={styles.fieldsetLegend}>
-                      <span style={{ color: '#00a884', fontWeight: 'bold' }}>—</span> Subject-wise Present vs Absent <span style={{ color: '#00a884', fontWeight: 'bold' }}>—</span>
+                      <span style={{ color: '#00a884', fontWeight: 'bold' }}>—</span> Subject-wise Present vs Absent (Vertical Bar Graph) <span style={{ color: '#00a884', fontWeight: 'bold' }}>—</span>
                     </div>
 
                     <div style={styles.barGraphInner}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-                        <span style={{ fontSize: '0.88rem', fontWeight: '700', color: '#1e293b' }}>Subject Attendance Breakdown</span>
-                        <div style={{ display: 'flex', gap: '1.25rem' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', fontWeight: '700', color: '#047857' }}>
-                            <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#10b981' }} />
+                        <span style={{ fontSize: '0.88rem', fontWeight: '700', color: '#1e293b' }}>Subject Attendance Breakdown (Double Bar Graph)</span>
+                        <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', fontWeight: '700', color: '#0f172a' }}>
+                            <span style={{ width: '14px', height: '14px', backgroundColor: '#3b82f6', border: '1.5px solid #1e293b', borderRadius: '2px' }} />
                             <span>Present</span>
                           </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', fontWeight: '700', color: '#b91c1c' }}>
-                            <span style={{ width: '12px', height: '12px', borderRadius: '3px', backgroundColor: '#ef4444' }} />
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', fontWeight: '700', color: '#0f172a' }}>
+                            <span style={{
+                              width: '14px',
+                              height: '14px',
+                              background: 'repeating-linear-gradient(45deg, #60a5fa, #60a5fa 3px, #ffffff 3px, #ffffff 6px)',
+                              border: '1.5px solid #1e293b',
+                              borderRadius: '2px'
+                            }} />
                             <span>Absent</span>
                           </div>
                         </div>
                       </div>
 
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                        {myAttendanceCourses.map((course) => {
-                          const absents = course.lectures - course.presents;
-                          const presentRatio = (course.presents / course.lectures) * 100;
-                          const absentRatio = (absents / course.lectures) * 100;
+                      {/* Vertical Double Bar Chart Container */}
+                      <div style={{ position: 'relative', width: '100%', height: '260px', display: 'flex', borderBottom: '2px solid #1e293b', borderLeft: '2px solid #1e293b', paddingLeft: '35px', paddingBottom: '25px', paddingTop: '10px' }}>
+                        {/* Y-Axis Ticks & Gridlines */}
+                        <div style={{ position: 'absolute', left: 0, top: '10px', bottom: '25px', width: '30px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-end', fontSize: '0.7rem', fontWeight: '700', color: '#64748b', paddingRight: '6px' }}>
+                          <span>50</span>
+                          <span>40</span>
+                          <span>30</span>
+                          <span>20</span>
+                          <span>10</span>
+                          <span>0</span>
+                        </div>
 
-                          return (
-                            <div key={course.sNo} style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', fontWeight: '700', color: '#1e293b' }}>
-                                <span>{course.sNo}. {course.course} ({course.component})</span>
-                                <span>
-                                  <strong style={{ color: '#047857' }}>{course.presents} Present</strong> &nbsp;|&nbsp; <strong style={{ color: '#b91c1c' }}>{absents} Absent</strong> &nbsp;({course.percentage})
+                        {/* Background Gridlines */}
+                        <div style={{ position: 'absolute', left: '35px', right: 0, top: '10px', bottom: '25px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', pointerEvents: 'none', zIndex: 0 }}>
+                          <div style={{ borderTop: '1px dashed #e2e8f0', width: '100%' }} />
+                          <div style={{ borderTop: '1px dashed #e2e8f0', width: '100%' }} />
+                          <div style={{ borderTop: '1px dashed #e2e8f0', width: '100%' }} />
+                          <div style={{ borderTop: '1px dashed #e2e8f0', width: '100%' }} />
+                          <div style={{ borderTop: '1px dashed #e2e8f0', width: '100%' }} />
+                          <div style={{ borderTop: '1px solid #cbd5e1', width: '100%' }} />
+                        </div>
+
+                        {/* Vertical Bars Area */}
+                        <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'flex-end' }}>
+                          {myAttendanceCourses.map((course) => {
+                            const absents = course.lectures - course.presents;
+                            const maxLectures = 50;
+                            const presentHeightPct = Math.min(100, (course.presents / maxLectures) * 100);
+                            const absentHeightPct = Math.min(100, (absents / maxLectures) * 100);
+
+                            return (
+                              <div key={course.sNo} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', justifyContent: 'flex-end', position: 'relative' }}>
+                                {/* Double Vertical Bar Pair */}
+                                <div style={{ display: 'flex', alignItems: 'flex-end', gap: '3px', height: '100%' }}>
+                                  {/* Present Bar (Solid Blue) */}
+                                  <div
+                                    title={`${course.sNo}. ${course.course}: ${course.presents} Presents`}
+                                    style={{
+                                      width: '15px',
+                                      height: `${presentHeightPct}%`,
+                                      backgroundColor: '#3b82f6',
+                                      border: '1.5px solid #1e293b',
+                                      borderBottom: 'none',
+                                      borderRadius: '2px 2px 0 0',
+                                      transition: 'height 0.3s ease',
+                                      position: 'relative'
+                                    }}
+                                  >
+                                    <span style={{ position: 'absolute', top: '-16px', left: '50%', transform: 'translateX(-50%)', fontSize: '0.65rem', fontWeight: 800, color: '#1e293b' }}>
+                                      {course.presents}
+                                    </span>
+                                  </div>
+
+                                  {/* Absent Bar (Hatched Striped Pattern) */}
+                                  <div
+                                    title={`${course.sNo}. ${course.course}: ${absents} Absents`}
+                                    style={{
+                                      width: '15px',
+                                      height: `${absentHeightPct}%`,
+                                      background: 'repeating-linear-gradient(45deg, #60a5fa, #60a5fa 3px, #ffffff 3px, #ffffff 6px)',
+                                      border: '1.5px solid #1e293b',
+                                      borderBottom: 'none',
+                                      borderRadius: '2px 2px 0 0',
+                                      transition: 'height 0.3s ease',
+                                      position: 'relative'
+                                    }}
+                                  >
+                                    <span style={{ position: 'absolute', top: '-16px', left: '50%', transform: 'translateX(-50%)', fontSize: '0.65rem', fontWeight: 800, color: '#dc2626' }}>
+                                      {absents}
+                                    </span>
+                                  </div>
+                                </div>
+
+                                {/* X-Axis Category Label */}
+                                <span style={{ position: 'absolute', bottom: '-22px', fontSize: '0.72rem', fontWeight: 800, color: '#0f172a' }}>
+                                  S{course.sNo}
                                 </span>
                               </div>
-                              
-                              <div style={styles.barTrack}>
-                                <div
-                                  style={{
-                                    width: `${presentRatio}%`,
-                                    backgroundColor: '#10b981',
-                                    height: '100%',
-                                    borderRadius: absents === 0 ? '4px' : '4px 0 0 4px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    color: '#ffffff',
-                                    fontSize: '0.7rem',
-                                    fontWeight: '800'
-                                  }}
-                                  title={`${course.presents} Lectures Present`}
-                                >
-                                  {course.presents > 4 ? `${course.presents} P` : ''}
-                                </div>
+                            );
+                          })}
+                        </div>
+                      </div>
 
-                                <div
-                                  style={{
-                                    width: `${absentRatio}%`,
-                                    backgroundColor: '#ef4444',
-                                    height: '100%',
-                                    borderRadius: course.presents === 0 ? '4px' : '0 4px 4px 0',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    color: '#ffffff',
-                                    fontSize: '0.7rem',
-                                    fontWeight: '800'
-                                  }}
-                                  title={`${absents} Lectures Absent`}
-                                >
-                                  {absents > 4 ? `${absents} A` : ''}
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
+                      {/* Course Legend Map below graph */}
+                      <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.5rem', backgroundColor: '#f8fafc', padding: '0.75rem 1rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                        {myAttendanceCourses.map((c) => (
+                          <div key={c.sNo} style={{ fontSize: '0.74rem', color: '#334155', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                            <span style={{ fontWeight: 800, color: '#0369a1', backgroundColor: '#e0f2fe', padding: '0.1rem 0.35rem', borderRadius: '4px', fontSize: '0.7rem' }}>
+                              S{c.sNo}
+                            </span>
+                            <span style={{ fontWeight: 700, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              {c.course} ({c.component})
+                            </span>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -1918,26 +1980,54 @@ export default function AttendancePage({ initialTab = 'my-attendance', searchTer
                   onChange={e => setSelectedDate(e.target.value)}
                   style={styles.selectInput}
                 >
-                  <option value="Oct 08, 2026">Today - Oct 08, 2026</option>
-                  <option value="Oct 07, 2026">Oct 07, 2026</option>
-                  <option value="Oct 06, 2026">Oct 06, 2026</option>
+                  <option value="Oct 08, 2026">Oct 08, 2026 (Today - Editable)</option>
+                  <option value="Oct 07, 2026">Oct 07, 2026 (1 Day Ago - Editable)</option>
+                  <option value="Oct 04, 2026">Oct 04, 2026 (🔒 Locked - Past 2 Days Window)</option>
                 </select>
               </div>
 
-              <button 
-                onClick={markAllPresent} 
-                style={styles.markAllBtn}
-                title="Mark all listed students as present"
-              >
-                <CheckSquare size={15} />
-                <span>Mark All Present</span>
-              </button>
+              {selectedDate === 'Oct 04, 2026' ? (
+                <div style={{
+                  backgroundColor: '#fee2e2',
+                  color: '#991b1b',
+                  border: '1px solid #fca5a5',
+                  padding: '0.45rem 0.85rem',
+                  borderRadius: '8px',
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem'
+                }}>
+                  🔒 Attendance Edit Locked (Past 2-Day Cutoff)
+                </div>
+              ) : (
+                <button 
+                  onClick={markAllPresent} 
+                  style={styles.markAllBtn}
+                  title="Mark all listed students as present"
+                >
+                  <CheckSquare size={15} />
+                  <span>Mark All Present</span>
+                </button>
+              )}
             </div>
 
-            <button onClick={handleSaveTracker} style={styles.saveLedgerBtn}>
-              <Save size={16} />
-              <span>{savedSuccess ? 'Ledger Saved Successfully!' : 'Save Attendance Ledger'}</span>
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>
+                🚫 Deletion Disabled for Attendance Logs (Audit Locked)
+              </span>
+              <button 
+                onClick={selectedDate === 'Oct 04, 2026' ? () => showBanner('Attendance is locked (older than 2 days) and cannot be edited.', 'error') : handleSaveTracker} 
+                style={{
+                  ...styles.saveLedgerBtn,
+                  ...(selectedDate === 'Oct 04, 2026' ? { backgroundColor: '#94a3b8', cursor: 'not-allowed' } : {})
+                }}
+              >
+                <Save size={16} />
+                <span>{selectedDate === 'Oct 04, 2026' ? '🔒 Locked (Read Only)' : savedSuccess ? 'Ledger Saved Successfully!' : 'Save Attendance Ledger'}</span>
+              </button>
+            </div>
           </div>
 
           <div style={styles.statGrid}>

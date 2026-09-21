@@ -144,47 +144,47 @@ export default function DashboardPage({ currentUser, onNavigateToStudent }) {
     <div>
       {/* 4 Stat Cards */}
       <div style={styles.statGrid}>
-        <div className="card" style={styles.statCard}>
+        <div className="card" style={{ ...styles.statCard, borderLeft: '4px solid #00a884' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={styles.statTitle}>{isFaculty ? 'Assigned Faculty Courses' : 'Overall Attendance'}</span>
             {isFaculty ? <BookOpen size={18} color="#00a884" /> : <CheckCircle size={18} color="#00a884" />}
           </div>
-          <div style={styles.statNumber}>{isFaculty ? '4 Batches' : '86.5%'}</div>
+          <div style={{ ...styles.statNumber, color: '#047857' }}>{isFaculty ? '4 Batches' : '86.5%'}</div>
           <span style={{ fontSize: '0.78rem', color: '#047857', fontWeight: 600 }}>
             {isFaculty ? '184 Total Enrolled Students' : 'Above 75% Cutoff Threshold'}
           </span>
         </div>
 
-        <div className="card" style={{ ...styles.statCard, borderLeft: '4px solid #00a884' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={styles.statTitle}>{isFaculty ? 'Faculty Class Attendance Avg' : 'Overall Marks Average'}</span>
-            <UserCheck size={18} color="#00a884" />
-          </div>
-          <div style={{ ...styles.statNumber, color: '#047857' }}>{isFaculty ? '88.4%' : '81.4%'}</div>
-          <span style={{ fontSize: '0.78rem', color: '#047857', fontWeight: 600 }}>
-            {isFaculty ? '163 / 184 Students On Track' : 'Equivalent CGPA: 3.65 / 4.0'}
-          </span>
-        </div>
-
         <div className="card" style={{ ...styles.statCard, borderLeft: '4px solid #0284c7' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={styles.statTitle}>{isFaculty ? 'Pass / Standing Rate' : 'Internal Score (40%)'}</span>
+            <span style={styles.statTitle}>{isFaculty ? 'Faculty Class Attendance Avg' : 'Semester SGPA'}</span>
             <Award size={18} color="#0284c7" />
           </div>
-          <div style={{ ...styles.statNumber, color: '#0369a1' }}>{isFaculty ? '92.5%' : '36.5 / 40'}</div>
+          <div style={{ ...styles.statNumber, color: '#0369a1' }}>{isFaculty ? '88.4%' : '8.25'}</div>
           <span style={{ fontSize: '0.78rem', color: '#0369a1', fontWeight: 600 }}>
-            {isFaculty ? 'Top Educator Performance Index' : '91.2% Internal Average'}
+            {isFaculty ? '163 / 184 Students On Track' : 'Scale: 10.0 (WINTER 2026)'}
           </span>
         </div>
 
-        <div className="card" style={{ ...styles.statCard, borderLeft: '4px solid #ef4444' }}>
+        <div className="card" style={{ ...styles.statCard, borderLeft: '4px solid #7c3aed' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={styles.statTitle}>{isFaculty ? 'Student Risk Advisory Flags' : 'External Score (60%)'}</span>
-            <AlertTriangle size={18} color="#ef4444" />
+            <span style={styles.statTitle}>{isFaculty ? 'Pass / Standing Rate' : 'Cumulative CGPA'}</span>
+            <GraduationCap size={18} color="#7c3aed" />
           </div>
-          <div style={{ ...styles.statNumber, color: '#dc2626' }}>{isFaculty ? '3 Flags' : '44.9 / 60'}</div>
-          <span style={{ fontSize: '0.78rem', color: '#dc2626', fontWeight: 600 }}>
-            {isFaculty ? 'Requires Faculty Intervention' : '74.8% External Average'}
+          <div style={{ ...styles.statNumber, color: '#6d28d9' }}>{isFaculty ? '92.5%' : '7.85'}</div>
+          <span style={{ fontSize: '0.78rem', color: '#6d28d9', fontWeight: 600 }}>
+            {isFaculty ? 'Top Educator Performance Index' : 'UGC 10-Point System (First Class)'}
+          </span>
+        </div>
+
+        <div className="card" style={{ ...styles.statCard, borderLeft: '4px solid #f59e0b' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={styles.statTitle}>{isFaculty ? 'Student Risk Advisory Flags' : 'Internal Assessment Avg'}</span>
+            {isFaculty ? <AlertTriangle size={18} color="#ef4444" /> : <UserCheck size={18} color="#f59e0b" />}
+          </div>
+          <div style={{ ...styles.statNumber, color: isFaculty ? '#dc2626' : '#b45309' }}>{isFaculty ? '3 Flags' : '36.5 / 40'}</div>
+          <span style={{ fontSize: '0.78rem', color: isFaculty ? '#dc2626' : '#b45309', fontWeight: 600 }}>
+            {isFaculty ? 'Requires Faculty Intervention' : '91.2% Internal Average Score'}
           </span>
         </div>
       </div>
@@ -202,8 +202,8 @@ export default function DashboardPage({ currentUser, onNavigateToStudent }) {
         </span>
       </div>
 
-      <div style={styles.chartsGrid}>
-        {/* Card 1: Donut Pie Chart */}
+      <div style={{ display: 'grid', gridTemplateColumns: isFaculty ? '1fr 1.2fr 1fr' : '1fr 1fr', gap: '1.5rem' }}>
+        {/* Card 1: Donut Pie Chart (Overall Attendance) */}
         <div className="card" style={styles.chartCard}>
           <div style={styles.chartHeader}>
             <div>
@@ -268,17 +268,17 @@ export default function DashboardPage({ currentUser, onNavigateToStudent }) {
           </div>
         </div>
 
-        {/* Card 2: Faculty Taught Courses Breakdown OR Student Subject Attendance */}
-        <div className="card" style={styles.chartCard}>
-          <div style={styles.chartHeader}>
-            <div>
-              <h3 style={styles.chartTitle}>{isFaculty ? 'Assigned Courses & Class Metrics' : 'Subject-Wise Attendance Breakdown'}</h3>
-              <p style={styles.chartSubtitle}>{isFaculty ? 'Active taught courses & attendance rates' : 'Attendance percentage per subject (75% Threshold Line)'}</p>
+        {/* Card 2: Faculty Taught Courses Breakdown (Only rendered for Faculty view) */}
+        {isFaculty && (
+          <div className="card" style={styles.chartCard}>
+            <div style={styles.chartHeader}>
+              <div>
+                <h3 style={styles.chartTitle}>Assigned Courses & Class Metrics</h3>
+                <p style={styles.chartSubtitle}>Active taught courses & attendance rates</p>
+              </div>
+              <BarChart3 size={18} color="#00a884" />
             </div>
-            <BarChart3 size={18} color="#00a884" />
-          </div>
 
-          {isFaculty ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
               {facultyTaughtCourses.map((c) => (
                 <div key={c.code} style={{ padding: '0.6rem 0.75rem', borderRadius: '10px', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0' }}>
@@ -307,39 +307,8 @@ export default function DashboardPage({ currentUser, onNavigateToStudent }) {
                 </div>
               ))}
             </div>
-          ) : (
-            <div style={styles.subjectBarContainer}>
-              <div style={styles.thresholdNotice}>
-                <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#ef4444' }} />
-                <span>Red indicates subject attendance below mandatory 75% cutoff</span>
-              </div>
-
-              <div style={styles.barList}>
-                {subjectAttendanceData.map((subj) => {
-                  const isBelowCutoff = subj.attendance < 75;
-                  return (
-                    <div key={subj.code} style={styles.subjectBarItem}>
-                      <div style={styles.subjectLabelRow}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                          <span style={styles.subjectCode}>{subj.code}</span>
-                          <span style={styles.subjectName}>{subj.name}</span>
-                        </div>
-                        <span style={{ fontSize: '0.85rem', fontWeight: 700, color: isBelowCutoff ? '#dc2626' : '#047857' }}>
-                          {subj.attendance}%
-                        </span>
-                      </div>
-
-                      <div style={styles.barTrack}>
-                        <div style={styles.thresholdLine} title="75% Attendance Cutoff" />
-                        <div style={{ ...styles.barFill, width: `${subj.attendance}%`, backgroundColor: isBelowCutoff ? '#ef4444' : '#00a884' }} />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Card 3: Batch Risk Distribution */}
         <div className="card" style={styles.chartCard}>

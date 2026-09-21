@@ -23,7 +23,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 
-export default function GradesPage({ initialTab = 'exam-score', searchTerm = '' }) {
+export default function GradesPage({ initialTab = 'exam-score', searchTerm = '', currentUser }) {
   const [activeSubTab, setActiveSubTab] = useState(initialTab);
 
   useEffect(() => {

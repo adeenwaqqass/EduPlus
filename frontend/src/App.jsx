@@ -15,6 +15,7 @@ import GradesPage from './pages/GradesPage';
 import FinancePage from './pages/FinancePage';
 import FeedbackFormPage from './pages/FeedbackFormPage';
 import SettingsPage from './pages/SettingsPage';
+import AnalyticsPage from './pages/AnalyticsPage';
 import { LoginPage } from './components/landing';
 import { AlertTriangle, UserX, CheckCircle2, Sparkles, Megaphone } from 'lucide-react';
 import './App.css';
@@ -221,6 +222,8 @@ export default function App() {
         return 'Home';
       case 'dashboard':
         return 'Dashboard';
+      case 'analytics':
+        return 'Analytics & ML Early Warning';
       case 'admission':
       case 'students':
       case 'student-directory':
@@ -293,6 +296,8 @@ export default function App() {
         );
       case 'dashboard':
         return <DashboardPage currentUser={currentUser} onNavigateToStudent={handleSelectStudent} />;
+      case 'analytics':
+        return <AnalyticsPage currentUser={currentUser} searchTerm={searchTerm} />;
       case 'admission':
       case 'students':
       case 'personal-info':
@@ -328,13 +333,22 @@ export default function App() {
       case 'major-minor-students':
         return <CoursesPage initialTab={activeTab} searchTerm={searchTerm} currentUser={currentUser} />;
       case 'faculty-portal':
-        return <FacultyPortalPage onAddNotice={handleAddNotice} searchTerm={searchTerm} onSelectStudent={handleSelectStudent} />;
+        if (currentUser?.role === 'student') {
+          return <DashboardPage currentUser={currentUser} onNavigateToStudent={handleSelectStudent} />;
+        }
+        return <FacultyPortalPage currentUser={currentUser} onAddNotice={handleAddNotice} searchTerm={searchTerm} onSelectStudent={handleSelectStudent} />;
       case 'admin-portal':
-        return <AdminPortalPage searchTerm={searchTerm} />;
+        if (currentUser?.role !== 'admin') {
+          return <DashboardPage currentUser={currentUser} onNavigateToStudent={handleSelectStudent} />;
+        }
+        return <AdminPortalPage currentUser={currentUser} searchTerm={searchTerm} />;
       case 'faculty':
       case 'admin':
       case 'faculty-admin':
-        return <FacultyAdminPage onAddNotice={handleAddNotice} searchTerm={searchTerm} />;
+        if (currentUser?.role === 'student') {
+          return <DashboardPage currentUser={currentUser} onNavigateToStudent={handleSelectStudent} />;
+        }
+        return <FacultyAdminPage currentUser={currentUser} onAddNotice={handleAddNotice} searchTerm={searchTerm} />;
       case 'staff-directory':
         return <FacultyPage searchTerm={searchTerm} />;
       case 'attendance':
@@ -345,6 +359,9 @@ export default function App() {
       case 'my-calendar':
         return <AttendancePage initialTab="my-calendar" searchTerm={searchTerm} currentUser={currentUser} />;
       case 'create-class':
+        if (currentUser?.role === 'student') {
+          return <DashboardPage currentUser={currentUser} onNavigateToStudent={handleSelectStudent} />;
+        }
         return <AttendancePage initialTab="create-class" searchTerm={searchTerm} currentUser={currentUser} />;
       case 'leave-requests':
         return <AttendancePage initialTab="leave-requests" searchTerm={searchTerm} currentUser={currentUser} />;

@@ -26,15 +26,24 @@ public class StudentDTO {
     
     // Academic & Risk Metrics
     private Double cgpa;
+    private Double sgpa;
     private Double attendancePercentage;
     private String riskLevel; // 'CRITICAL' | 'IMPORTANT' | 'NORMAL'
     private Double riskScore; // 0.0 to 100.0 from Achilles AI
     
+    // Admission & Family Details (SPPU Standard)
+    private String fatherName;
+    private String motherName;
+    private String degree;
+    private String scheme;
+    private String admissionCategory;
+    private String academicSession;
+
     // Guardian & Address
     private String parentName;
     private String parentPhone;
     private String address;
     private String hostelRoom;
 
-    private List<String> enrolledCourses;
+    private List<Object> enrolledCourses;
 }

@@ -10,6 +10,7 @@ import com.Eduplus.cms.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,7 @@ public class CourseService {
         Student student = studentRepository.findByRegistrationNumber(request.getRegistrationNumber())
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found: " + request.getRegistrationNumber()));
 
-        student.setEnrolledCourses(request.getCourseCodes());
+        student.setEnrolledCourses(new ArrayList<>(request.getCourseCodes()));
         studentRepository.save(student);
 
         // Return first registered course details
@@ -48,13 +49,13 @@ public class CourseService {
                 .id(c.getId())
                 .courseCode(c.getCourseCode())
                 .title(c.getTitle())
-                .credits(c.getCredits())
                 .department(c.getDepartment())
                 .semester(c.getSemester())
+                .credits(c.getCredits())
                 .facultyName(c.getFacultyName())
                 .facultyId(c.getFacultyId())
-                .totalConductedLectures(c.getTotalConductedLectures())
-                .enrolledStudentsCount(c.getEnrolledStudentsCount())
+                .totalConductedLectures(c.getTotalConductedLectures() != null ? c.getTotalConductedLectures() : 40)
+                .enrolledStudentsCount(c.getEnrolledStudentsCount() != null ? c.getEnrolledStudentsCount() : 65)
                 .type(c.getType())
                 .syllabusUrl(c.getSyllabusUrl())
                 .build();
