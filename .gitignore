@@ -12,10 +12,18 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 
+# Research Paper files (local only)
+paper.docx
+paper.tex
+docs/paper.docx
+docs/paper.tex
+docs/generate_paper.py
+
 # IDE & OS files
 .vscode/
 .idea/
 .DS_Store
 *.log
 *.env
+
 
